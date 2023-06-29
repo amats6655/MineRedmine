@@ -1,0 +1,46 @@
+﻿@model List<Redmine.Net.Api.Types.Issue>
+<h1 align="center">Мои задачи</h1>
+<br/>
+<div class="issue-grid">
+
+    @foreach (var issue in Model)
+    {
+        var cardClass = GetCardClass(issue.CreatedOn);
+
+        <a href="@Url.Action("Edit", "Issues", new { id = issue.Id })" class="issue-card @cardClass">
+            <div class="card @cardClass">
+                <h5 class="card-title">@issue.Subject</h5>
+                <h6 class="card-subtitle mb-2 text-muted">ID: @issue.Id</h6>
+                <h6 class="card-subtitle mb-2 text-muted">Назначена: @issue.AssignedTo.Name</h6>
+                <h6 class="card-subtitle mb-2 text-muted">Статус: @issue.Status.Name</h6>
+            </div>
+        </a>
+    }
+
+    @functions{
+
+        private string GetCardClass(DateTime? createdOn)
+        {
+            if (createdOn == null)
+            {
+                return "card-default";
+            }
+            var daysOld = (DateTime.Now - createdOn.Value).TotalDays;
+            if (daysOld > 7)
+            {
+                return "card-old";
+            }
+            else if (daysOld > 3)
+            {
+                return "card-recent";
+            }
+            else
+            {
+                return "card-new";
+            }
+        }
+
+    }
+</div>
+
+

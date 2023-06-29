@@ -1,0 +1,29 @@
+﻿
+<!-- HTML для модального окна -->
+<div id="apiKeyModal" class="modal" tabindex="-1" role="document">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Вход</h5>
+            </div>
+            <div class="modal-body">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="useApiKey" checked="checked"/>
+                    <lable class="form-check-label" for="useApiKey">Использовать API-ключ</lable>
+                </div>
+                <input id="apiKeyInput" type="text" class="form-control" placeholder="API-ключ"/>
+                <input id="usernameInput" type="text" class="form-control" placeholder="Логин" style="display: none;"/>
+                <input id="passwordInput" type="password" class="form-control" placeholder="Пароль" style="display: none;"/>
+                <div id="error" class="alert-danger alert" style="display: none;">Неверные данные для входа</div>
+            </div>
+            <div class="modal-footer">
+                <button id="submitButton" type="button" class="btn submit-key btn-primary">Войти</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript для отображения модального окна при загрузке страницы -->
+<script src="~/js/auth.js"></script>
+
+

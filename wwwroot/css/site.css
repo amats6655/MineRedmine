@@ -1,0 +1,78 @@
+html {
+  font-size: 16px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+  background: #8C56D4; 
+  background: linear-gradient(135deg, #8C56D477, #5BB4AA77);
+}
+
+.issue-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-gap: 1em;
+}
+
+.card{
+  border: none;
+}
+
+.issue-card{
+  min-width: 95%;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0, 0.2);
+  transition: 0.3s;
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 5px;
+  padding: 10px;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  word-wrap: break-word;
+}
+
+.issue-card:hover{
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.3)
+}
+
+.card-old{
+  background-color: #FFBBBB;
+}
+
+.card-recent{
+  background-color: #FFDDBB;
+}
+
+.card-new{
+  background-color: #BBFFBB;
+}
+
+#loading{
+  position: fixed;
+  top:0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  background-color: rgba(255,255,255,0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
