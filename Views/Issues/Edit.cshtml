@@ -1,18 +1,22 @@
 ﻿@using System.Collections.Immutable
 @model Redmine.Net.Api.Types.Issue
 
-
-
-<h1> Зоявка #@Model.Id.ToString()</h1>
+<h1 align="center">Зоявка #@Model.Id</h1>
 <br/>
-<p><strong>Создано: </strong>@Model.CreatedOn.ToString()</p>
-<p><strong>Заявитель: </strong>@Model.Author.Name</p>
-<p><strong>Тема: </strong>@Model.Subject</p>
-<p><strong>Телефон: </strong>@GetPhoneNumber()</p>
-<p><strong>Местоположение: </strong>@GetLocation()</p>
-<p><strong>Описание: </strong><br/>@Html.Raw(Model.Description)</p>
-
-
+<section class="wrapper">
+    <div class="container">
+        <div class="card bg-light mb-3">
+            <div class="card-body">
+                <p><strong>Создано: </strong>@Model.CreatedOn.ToString()</p>
+                <p><strong>Заявитель: </strong>@Model.Author.Name</p>
+                <p class="card-text text-wrap"><strong>Тема: </strong>@Model.Subject</p>
+                <p><strong>Телефон: </strong>@GetPhoneNumber()</p>
+                <p><strong>Местоположение: </strong>@GetLocation()</p>
+                <p><strong>Описание: </strong><br/>@Html.Raw(Model.Description)</p>
+            </div>
+        </div>
+    </div>
+</section>
 
 @functions{
 
