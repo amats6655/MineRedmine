@@ -1,36 +1,46 @@
 ﻿@model List<Redmine.Net.Api.Types.Issue>
-    
+
 <h1 align="center">Мои задачи</h1>
 <br/>
 <section class="wrapper">
     <div class="container">
-        <div class="row">
-            @foreach (var issue in Model)
-            {
-                var cardClass = GetCardClass(issue.CreatedOn);
-                <div class="col-12 col-md-6 col-lg-4 mb-4">
-                    <a href="@Url.Action("Edit", "Issues", new { id = issue.Id })" class="text-white">
-                        <div class="card text-white card-has-bg click-col">
-                            <div class="card-img-overlay d-flex flex-column">
-                                <div class="card-body">
-                                    <small class="card-meta mb-2">@issue.Id</small>
-                                    <h4 class="card-title mt-0 text-wrap">@issue.Subject</h4>
-                                    <small><i class="far fa-clock"></i>@issue.AssignedTo.Name</small>
-                                </div>
-                                <div class="card-footer">
-                                    <div class="media">
-                                        <div class="media-body">
-                                            <h6 class="my-0 text-white d-block">Заявитель</h6>
-                                            <small>@issue.Author.Name</small>
+        @foreach (var statusGroup in Model.GroupBy(issue => issue.Status.Name))
+        {
+            <details>
+                <summary>@statusGroup.Key</summary>
+                <div class="row">
+                    @foreach (var issue in statusGroup)
+                    {
+                        var cardClass = GetCardClass(issue.CreatedOn);
+                        <div class="col-12 col-md-6 col-lg-4 mb-4">
+                            <a href="@Url.Action("Edit", "Issues", new { id = issue.Id })" class="text-white">
+                                <div class="card text-white card-has-bg click-col">
+                                    <div class="card-img-overlay d-flex flex-column">
+                                        <div class="card-body">
+                                            <small class="card-meta mb-2">@issue.Id</small>
+                                            <h6 class="card-title mt-0 text-wrap">@issue.Subject</h6>
+                                            <small><i class="far fa-clock"></i>@issue.AssignedTo.Name</small>
+                                        </div>
+                                        <div class="card-footer d-flex justify-content-between">
+                                            <div class="media">
+                                                <div class="media-body">
+                                                    <h6 class="my-0 text-white d-block">Заявитель</h6>
+                                                    <small>@issue.Author.Name</small>
+                                                </div>
+                                            </div>
+                                            <div class="align-self-end">
+                                                <h6 class="my-0 text-white d-block">Статус</h6>
+                                                <small>@issue.Status.Name</small>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </a>
                         </div>
-                    </a>
+                    }
                 </div>
-            }
-        </div>
+            </details>
+        }
     </div>
 </section>
 
