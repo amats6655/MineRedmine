@@ -7,7 +7,7 @@ namespace RedmineApp.Services
 {
     public class RedmineService
     {
-        private readonly RedmineManager _redmineManager;
+        private readonly RedmineManager? _redmineManager;
 
         // Добавлен конструктор по умолчанию
         public RedmineService()
@@ -38,7 +38,9 @@ namespace RedmineApp.Services
                 {RedmineKeys.ASSIGNED_TO_ID, "me"},
                 {RedmineKeys.STATUS_ID, "7|14|2"}
             };
-            return await _redmineManager.GetObjectsAsync<Issue>(parameters);
+            var result = await _redmineManager.GetObjectsAsync<Issue>(parameters);
+            var orderedEnumerable = result.OrderByDescending(issue => issue.UpdatedOn).ToList();
+            return orderedEnumerable;
         }
 
         public async Task<Issue> GetIssueAsync(int id)

@@ -4,6 +4,10 @@
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <PackageId>MineRedmine</PackageId>
+    <Authors>mr.Kotik</Authors>
+    <Company>mrKotik</Company>
+    <Product>MineRedmine</Product>
   </PropertyGroup>
 
   <ItemGroup>

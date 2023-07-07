@@ -1,5 +1,4 @@
-﻿@using System.Collections.Immutable
-@model Redmine.Net.Api.Types.Issue
+﻿@model Redmine.Net.Api.Types.Issue
 
 <h1 align="center">Зоявка #@Model.Id</h1>
 <br/>
@@ -19,36 +18,31 @@
 </section>
 
 @functions{
-
     private string GetPhoneNumber()
     {
-        string phone = "Не указан";
-        for (int i = 0; i < Model.CustomFields.Count; i++)
+        var phone = "Не указан";
+        foreach (var t in Model.CustomFields)
         {
-            if (Model.CustomFields[i].Name.Equals("Телефон для связи"))
-            {
-                phone = Model.CustomFields[i].Values[0].Info;
-                break;
-            }
+            if (!t.Name.Equals("Телефон для связи")) continue;
+            phone = t.Values[0].Info;
+            break;
         }
+        
         return phone;
     }
 }
 
-
 @functions {
-
     private string GetLocation()
     {
-        string location = "Не указано";
-        for (int i = 0; i < Model.CustomFields.Count; i++)
+        var location = "Не указано";
+        foreach (var t in Model.CustomFields)
         {
-            if (Model.CustomFields[i].Name.Equals("Местонахождение"))
-            {
-                location = Model.CustomFields[i].Values[0].Info;
-                break;
-            }
+            if (!t.Name.Equals("Местонахождение")) continue;
+            location = t.Values[0].Info;
+            break;
         }
+        
         return location;
     }
 }

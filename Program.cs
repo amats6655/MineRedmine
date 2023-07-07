@@ -13,9 +13,9 @@ builder.Services.AddSession(options =>
 builder.Services.AddScoped<RedmineService>(sp =>
 {
     var httpContextAccessor = sp.GetRequiredService<IHttpContextAccessor>();
-    var apiKey = httpContextAccessor.HttpContext.Session.GetString("apiKey");
-    var username = httpContextAccessor.HttpContext.Session.GetString("username");
-    var password = httpContextAccessor.HttpContext.Session.GetString("password");
+    var apiKey = httpContextAccessor.HttpContext?.Session.GetString("apiKey");
+    var username = httpContextAccessor.HttpContext?.Session.GetString("username");
+    var password = httpContextAccessor.HttpContext?.Session.GetString("password");
 
     if (!string.IsNullOrEmpty(apiKey))
     {
