@@ -7,9 +7,9 @@ public class LoginController: Controller
 {
     public IActionResult Index()
     {
-        string? apiKey = HttpContext.Session.GetString("apiKey");
-        string? username = HttpContext.Session.GetString("username");
-        string? password = HttpContext.Session.GetString("password");
+        var apiKey = HttpContext.Session.GetString("apiKey");
+        var username = HttpContext.Session.GetString("username");
+        var password = HttpContext.Session.GetString("password");
 
         if (!string.IsNullOrEmpty(apiKey) && RedmineService.IsValidApiKey(apiKey))
         {
@@ -29,7 +29,7 @@ public class LoginController: Controller
     [HttpPost]
     public IActionResult ValidateApiKey(string apiKey)
     {
-        bool isValid = RedmineService.IsValidApiKey(apiKey);
+        var isValid = RedmineService.IsValidApiKey(apiKey);
         
         if (isValid)
         {
@@ -38,13 +38,13 @@ public class LoginController: Controller
             HttpContext.Session.Remove("password");
         }
 
-        return Json(new { isValid = isValid });
+        return Json(new { isValid });
     }
 
     [HttpPost]
     public IActionResult IsValidUserCredentials(string username, string password)
     {
-        bool isValid = RedmineService.IsValidUserCredentials(username, password);
+        var isValid = RedmineService.IsValidUserCredentials(username, password);
         if (isValid)
         {
             HttpContext.Session.SetString("username", username);
@@ -52,9 +52,8 @@ public class LoginController: Controller
             HttpContext.Session.Remove("apiKey");
         }
 
-        return Json(new { isValid = isValid });
+        return Json(new { isValid });
     }
-    
     
     public IActionResult Logout()
     {
