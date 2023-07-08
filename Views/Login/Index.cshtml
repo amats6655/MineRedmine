@@ -7,12 +7,12 @@
             </div>
             <div class="modal-body">
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="useApiKey" checked="checked"/>
+                    <input class="form-check-input" type="checkbox" value="" id="useApiKey"/>
                     <label class="form-check-label" for="useApiKey">Использовать API-ключ</label>
                 </div>
-                <input id="apiKeyInput" type="text" class="form-control" placeholder="API-ключ"/>
-                <input id="usernameInput" type="text" class="form-control" placeholder="Логин" style="display: none;"/><br/>
-                <input id="passwordInput" type="password" class="form-control" placeholder="Пароль" style="display: none;"/>
+                <input id="apiKeyInput" type="text" class="form-control authInput modal-auth" placeholder="API-ключ" style="display: none;"/>
+                <input id="usernameInput" type="text" class="form-control authInput modal-auth" placeholder="Логин"/>
+                <input id="passwordInput" type="password" class="form-control authInput modal-auth" placeholder="Пароль"/>
                 <div id="error" class="alert-danger alert" style="display: none;">Неверные данные для входа</div>
             </div>
             <div class="modal-footer">

@@ -15,6 +15,14 @@ $(document).ready(function() {
     });
 });
 
+$(".authInput").keyup(function(event) {
+    if (event.keyCode === 13) {
+
+        $(".load-issue").click();
+        $("#submitButton").click();
+    }
+});
+
 $("#submitButton").click(function() {
     if($('#useApiKey').is(':checked')) {
         $.post("/Login/ValidateApiKey", { apiKey: $("#apiKeyInput").val() }, function(data) {

@@ -136,3 +136,7 @@ details[open] {
 details[open] summary {
     margin-bottom: .5em;
 }
+
+.modal-auth{
+    margin-top: 1em;
+}
