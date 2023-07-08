@@ -39,8 +39,8 @@ namespace RedmineApp.Services
                 {RedmineKeys.STATUS_ID, "7|14|2"}
             };
             var result = await _redmineManager.GetObjectsAsync<Issue>(parameters);
-            var orderedEnumerable = result.OrderByDescending(issue => issue.UpdatedOn).ToList();
-            return orderedEnumerable;
+            var orderedResult = result.OrderByDescending(issue => issue.UpdatedOn).ToList();
+            return orderedResult;
         }
 
         public async Task<Issue> GetIssueAsync(int id)

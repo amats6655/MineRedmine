@@ -14,6 +14,7 @@
     <PackageReference Include="LigerShark.WebOptimizer.Core" Version="3.0.384" />
     <PackageReference Include="LigerShark.WebOptimizer.Sass" Version="3.0.99" />
     <PackageReference Include="redmine-api" Version="4.6.0" />
+    <PackageReference Include="Rick.Docs.Samples.RouteInfo" Version="1.0.0.8" />
   </ItemGroup>
 
   <ItemGroup>
