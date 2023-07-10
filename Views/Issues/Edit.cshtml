@@ -25,8 +25,8 @@
             <div class="container">
                 <div class="detail comments bg-light mb-3">
                     <div class="card-body">
-                        <p><strong>Пользователь: </strong>@Html.Raw(t.User.Name)
-                        </p>
+                        <strong>Пользователь: </strong>@Html.Raw(t.User.Name)
+                        <p><strong>Дата: </strong>@Html.Raw(t.CreatedOn)</p>
                         <p><strong>Комментарий: </strong><br/>@Html.Raw(t.Notes)
                         </p>
                     </div>
