@@ -37,6 +37,11 @@ body {
     padding-top: 30px;
 }
 
+.comments{
+    min-height: 100px;
+    padding-top: 20px;
+}
+
 .card {
     border: none;
     transition: all 500ms cubic-bezier(0.19, 1, 0.22, 1);

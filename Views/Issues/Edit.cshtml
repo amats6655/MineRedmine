@@ -17,6 +17,26 @@
     </div>
 </section>
 
+@foreach (var t in Model.Journals)
+{
+    @if (!string.IsNullOrEmpty(t.Notes))
+    {
+        <section class="wrapper">
+            <div class="container">
+                <div class="detail comments bg-light mb-3">
+                    <div class="card-body">
+                        <p><strong>Пользователь: </strong>@Html.Raw(t.User.Name)
+                        </p>
+                        <p><strong>Комментарий: </strong><br/>@Html.Raw(t.Notes)
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+}
+
+
 @functions{
     private string GetPhoneNumber()
     {

@@ -45,7 +45,8 @@ namespace RedmineApp.Services
 
         public async Task<Issue> GetIssueAsync(int id)
         {
-            return await _redmineManager.GetObjectAsync<Issue>(id.ToString(), null);
+            var parameters = new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.JOURNALS } };
+            return await _redmineManager.GetObjectAsync<Issue>(id.ToString(), parameters);
         }
 
         public async Task<User> GetCurrentUserAsync()
