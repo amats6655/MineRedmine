@@ -1,6 +1,6 @@
 ﻿@model Redmine.Net.Api.Types.Issue
 
-<h1 align="center">Зоявка #@Model.Id</h1>
+<h1 align="center">Заявка #@Model.Id</h1>
 <br/>
 <section class="wrapper">
     <div class="container">
@@ -21,18 +21,10 @@
 {
     @if (!string.IsNullOrEmpty(t.Notes))
     {
-        <section class="wrapper">
-            <div class="container">
-                <div class="detail comments bg-light mb-3">
-                    <div class="card-body">
-                        <strong>Пользователь: </strong>@Html.Raw(t.User.Name)
-                        <p><strong>Дата: </strong>@Html.Raw(t.CreatedOn)</p>
-                        <p><strong>Комментарий: </strong><br/>@Html.Raw(t.Notes)
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
+        <blockquote class="speech-bubble">
+          <p>@Html.Raw(t.Notes)</p>
+            <cite>@t.User.Name</cite>
+        </blockquote>
     }
 }
 
