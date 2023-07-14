@@ -57,21 +57,6 @@ body {
     overflow: hidden;
 }
 
-@media (orientation: portrait) {
-    .card {
-        min-height: 25vh;
-    }
-    .detail {
-        min-height: 50vh;
-    }
-}
-
-@media (orientation: landscape) {
-    .card {
-        min-height: 200px;
-    }
-}
-
 .card-body {
     padding: 0 10px 10px;
 }
@@ -179,4 +164,39 @@ details[open] summary {
     font-weight: 200;
     letter-spacing: 0.5px;
     color: white;
+}
+
+
+@media (orientation: portrait) {
+    .card{
+        min-height: 25vh;
+    }
+    .card-body{
+        padding: 0;
+    }
+    .card-footer{
+        padding: 0;
+    }
+    .card-title{
+        padding:0;
+    }
+    .detail {
+        min-height: 50vh;
+    }
+    .wrapper {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .container{
+        padding: 0;
+    }
+    .speech-bubble{
+        margin: 10px 10px 40px;
+    }
+}
+
+@media (orientation: landscape) {
+    .card {
+        min-height: 200px;
+    }
 }
