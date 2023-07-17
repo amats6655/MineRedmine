@@ -11,10 +11,18 @@
                 <div class="row">
                     @foreach (var issue in statusGroup)
                     {
+                        var color = issue.Priority.Id switch
+                        {
+                            1 => "#23ec55",
+                            2 => "#2d51c1",
+                            3 => "#FF0000",
+                            _ => "#000000"
+                            };
+                        
                         <div class="col-12 col-md-6 col-lg-4 mb-4">
                             <a href="@Url.Action("Edit", "Issues", new { id = issue.Id })" class="text-white">
                                 <div class="card text-white card-has-bg click-col">
-                                    <div class="card-img-overlay d-flex flex-column">
+                                    <div class="card-img-overlay d-flex flex-column" style="background-color: @color">
                                         <div class="card-body">
                                             <small class="card-meta mb-2">@issue.Id</small>
                                             <h6 class="card-title mt-0">@issue.Subject</h6>

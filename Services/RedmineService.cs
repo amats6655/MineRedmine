@@ -107,6 +107,5 @@ namespace RedmineApp.Services
         {
             return _redmineManager != null;
         }
-        
     }
 }
