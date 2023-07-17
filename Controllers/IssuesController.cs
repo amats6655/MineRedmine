@@ -33,4 +33,16 @@ public class IssuesController : Controller
         var issue = await _redmineService.GetIssueAsync(id);
         return View(issue);
     }
+
+    [HttpPost]
+    public async Task<IActionResult> TakeIssue(int id)
+    {
+        if (!_redmineService.IsSessionValid())
+        {
+            return RedirectToAction("Index", "Login");
+        }
+
+        await _redmineService.TakeIssueAsync(id);
+        return RedirectToAction("Index");
+    }
 }

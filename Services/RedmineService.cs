@@ -54,6 +54,19 @@ namespace RedmineApp.Services
             var currentUser = await _redmineManager.GetCurrentUserAsync();
             return currentUser;
         }
+
+        public async Task TakeIssueAsync(int issueId)
+        {
+            var issue = await _redmineManager.GetObjectAsync<Issue>(issueId.ToString(), null);
+            var currentUser = await GetCurrentUserAsync();
+
+            if (issue.AssignedTo?.Id == currentUser.Id)
+            {
+                var status = await _redmineManager.GetObjectAsync<IssueStatus>("2", null);
+                issue.Status = status;
+                await _redmineManager.UpdateObjectAsync(issueId.ToString(), issue);
+            }
+        }
         
         public static bool IsValidApiKey(string apiKey)
         {
@@ -88,5 +101,6 @@ namespace RedmineApp.Services
         {
             return _redmineManager != null;
         }
+        
     }
 }

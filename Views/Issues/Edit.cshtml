@@ -14,6 +14,9 @@
                 <p><strong>Описание: </strong><br/>@Html.Raw(Model.Description)</p>
             </div>
         </div>
+        <form action="@Url.Action("TakeIssue", "Issues", new { id = Model.Id })" method="post">
+            <button type="submit" class="btn btn-primary">В работу</button>
+        </form>
     </div>
 </section>
 
@@ -42,9 +45,6 @@
         
         return phone;
     }
-}
-
-@functions {
     private string GetLocation()
     {
         var location = "Не указано";
@@ -58,3 +58,4 @@
         return location;
     }
 }
+
