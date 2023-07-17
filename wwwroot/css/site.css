@@ -167,6 +167,23 @@ details[open] summary {
 }
 
 
+.custom-button{
+    background-color: #527aee;
+    color: #Ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor:pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.2);
+    width: 30vh;
+}
+.custom-button:hover{
+    background-color: #1f368a;
+}
+
+
 @media (orientation: portrait) {
     .card{
         min-height: 25vh;
@@ -192,6 +209,14 @@ details[open] summary {
     }
     .speech-bubble{
         margin: 10px 10px 40px;
+    }
+    .custom-button{
+        width: 90%;
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translate(-50%);
+        z-index: 9998;
     }
 }
 

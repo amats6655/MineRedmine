@@ -14,11 +14,15 @@
                 <p><strong>Описание: </strong><br/>@Html.Raw(Model.Description)</p>
             </div>
         </div>
-        <form action="@Url.Action("TakeIssue", "Issues", new { id = Model.Id })" method="post">
-            <button type="submit" class="btn btn-primary">В работу</button>
-        </form>
+        <div align="center">
+            <form action="@Url.Action("TakeIssue", "Issues", new { id = Model.Id })" method="post">
+                <button type="submit" class="custom-button">В работу</button>
+            </form>
+        </div>
+
     </div>
 </section>
+<hr/>
 
 @foreach (var t in Model.Journals)
 {
@@ -30,7 +34,7 @@
         </blockquote>
     }
 }
-
+<br/><br/>
 
 @functions{
     private string GetPhoneNumber()
