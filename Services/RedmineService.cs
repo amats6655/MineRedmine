@@ -2,6 +2,7 @@
 using Redmine.Net.Api;
 using Redmine.Net.Api.Async;
 using Redmine.Net.Api.Types;
+using Newtonsoft.Json;
 
 namespace RedmineApp.Services
 {
@@ -59,14 +60,19 @@ namespace RedmineApp.Services
         {
             var issue = await _redmineManager.GetObjectAsync<Issue>(issueId.ToString(), null);
             var currentUser = await GetCurrentUserAsync();
-
-            if (issue.AssignedTo?.Id == currentUser.Id)
-            {
-                var status = await _redmineManager.GetObjectAsync<IssueStatus>("2", null);
-                issue.Status = status;
-                await _redmineManager.UpdateObjectAsync(issueId.ToString(), issue);
+            
+                var newStatus = GetIssueStatusesAsync(2).Result;
+                issue.Status = newStatus;
+                issue.AssignedTo = IdentifiableName.Create<IdentifiableName>(currentUser.Id);
+                await _redmineManager.UpdateObjectAsync<Issue>(issueId.ToString(), issue);
             }
+
+        private async Task<IssueStatus> GetIssueStatusesAsync(int id)
+        {
+            var issueStatuses = await _redmineManager.GetObjectsAsync<IssueStatus>(null);
+            return issueStatuses.FirstOrDefault(status => status.Id == id);
         }
+
         
         public static bool IsValidApiKey(string apiKey)
         {
