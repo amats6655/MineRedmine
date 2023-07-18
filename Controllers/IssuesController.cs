@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Redmine.Net.Api.Exceptions;
 using RedmineApp.Services;
 
 namespace RedmineApp.Controllers;
@@ -42,7 +43,25 @@ public class IssuesController : Controller
             return RedirectToAction("Index", "Login");
         }
 
-        await _redmineService.TakeIssueAsync(id);
-        return RedirectToAction("Index");
+        try
+        {
+            await _redmineService.TakeIssueAsync(id);
+            return RedirectToAction("Index");
+        }
+        catch (RedmineException ex)
+
+        {
+            if(ex.Message.Contains("You are not authorized to access this page."))
+            {
+                ViewBag.ErrorMessage = "У вас нет прав на взятие этой задачи в работу";
+                return View("Error");
+            }
+            else
+            {
+                ViewBag.ErrorMessage = "Произошла ошибка при попытке взять задачу в работу";
+                return View("Error");
+            }
+        }
+
     }
 }

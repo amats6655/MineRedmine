@@ -3,6 +3,7 @@ using Redmine.Net.Api;
 using Redmine.Net.Api.Async;
 using Redmine.Net.Api.Types;
 using Newtonsoft.Json;
+using Redmine.Net.Api.Exceptions;
 
 namespace RedmineApp.Services
 {
@@ -61,17 +62,21 @@ namespace RedmineApp.Services
             var issue = await _redmineManager.GetObjectAsync<Issue>(issueId.ToString(), null);
             var currentUser = await GetCurrentUserAsync();
             
-                var newStatus = GetIssueStatusesAsync(2).Result;
-                issue.Status = newStatus;
+
+                issue.Status = IssueStatus.Create<IssueStatus>(2);
                 issue.AssignedTo = IdentifiableName.Create<IdentifiableName>(currentUser.Id);
-                await _redmineManager.UpdateObjectAsync<Issue>(issueId.ToString(), issue);
+                try
+                {
+                    await _redmineManager.UpdateObjectAsync<Issue>(issueId.ToString(), issue);
+                }
+                catch
+                {
+                    throw new RedmineException("You are not authorized to access this page.");
+                }
+
             }
 
-        private async Task<IssueStatus> GetIssueStatusesAsync(int id)
-        {
-            var issueStatuses = await _redmineManager.GetObjectsAsync<IssueStatus>(null);
-            return issueStatuses.FirstOrDefault(status => status.Id == id);
-        }
+
 
         
         public static bool IsValidApiKey(string apiKey)

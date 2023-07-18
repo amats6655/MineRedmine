@@ -1,14 +1,11 @@
 ﻿$(document).ready(function (){
-    $(".load-issue").click(function (){
-        console.log("Включаем");
+    $(window).on("beforeunload", function (){
         $("#c").show();
-        
     });
-    
 });
-$(window).on("load",function (){
-    console.log("Включаем");
-    $("#c").hide();
+
+$(window).on("load", function (){
+    $("#c").fadeOut('slow');
 });
 
 
