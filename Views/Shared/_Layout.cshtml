@@ -11,7 +11,9 @@
 <body>
 <canvas id="c"></canvas>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/loading.js"></script>
+@await Component.InvokeAsync("Notyf")
 <header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
         <div class="container-fluid">

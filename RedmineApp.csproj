@@ -11,6 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AspNetCoreHero.ToastNotification" Version="1.1.0" />
     <PackageReference Include="LigerShark.WebOptimizer.Core" Version="3.0.384" />
     <PackageReference Include="LigerShark.WebOptimizer.Sass" Version="3.0.99" />
     <PackageReference Include="redmine-api" Version="4.6.0" />
@@ -20,6 +21,12 @@
   <ItemGroup>
     <_ContentIncludedByDefault Remove="Views\Home\Index.cshtml" />
     <_ContentIncludedByDefault Remove="Views\Home\Privacy.cshtml" />
+    <_ContentIncludedByDefault Remove="wwwroot\lib\toastr\content\toastr.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\lib\toastr\content\toastr.less" />
+    <_ContentIncludedByDefault Remove="wwwroot\lib\toastr\content\toastr.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\lib\toastr\content\toastr.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\lib\toastr\scripts\toastr.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\lib\toastr\scripts\toastr.min.js" />
   </ItemGroup>
 
   <ItemGroup>

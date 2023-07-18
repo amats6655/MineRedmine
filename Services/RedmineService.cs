@@ -58,25 +58,21 @@ namespace RedmineApp.Services
         }
 
         public async Task TakeIssueAsync(int issueId)
-        {
+            {
             var issue = await _redmineManager.GetObjectAsync<Issue>(issueId.ToString(), null);
             var currentUser = await GetCurrentUserAsync();
             
-
-                issue.Status = IssueStatus.Create<IssueStatus>(2);
-                issue.AssignedTo = IdentifiableName.Create<IdentifiableName>(currentUser.Id);
-                try
-                {
-                    await _redmineManager.UpdateObjectAsync<Issue>(issueId.ToString(), issue);
-                }
-                catch
-                {
-                    throw new RedmineException("You are not authorized to access this page.");
-                }
-
+            issue.Status = IssueStatus.Create<IssueStatus>(2);
+            issue.AssignedTo = IdentifiableName.Create<IdentifiableName>(currentUser.Id);
+            try
+            {
+                await _redmineManager.UpdateObjectAsync<Issue>(issueId.ToString(), issue);
             }
-
-
+            catch
+            {
+                throw new RedmineException("You are not authorized to access this page.");
+            }
+        }
 
         
         public static bool IsValidApiKey(string apiKey)

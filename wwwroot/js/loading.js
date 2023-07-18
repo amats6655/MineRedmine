@@ -3,7 +3,7 @@
         $("#c").show();
         setTimeout(function () {
             $("#c").fadeOut('slow');
-        }, 1500);
+        }, 5000);
     });
 });
 

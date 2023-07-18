@@ -1,3 +1,4 @@
+using AspNetCoreHero.ToastNotification;
 using RedmineApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,6 +33,8 @@ builder.Services.AddScoped<RedmineService>(sp =>
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddNotyf(config => { config.DurationInSeconds = 5; config.IsDismissable = true; config.Position = NotyfPosition.TopRight; });
+
 
 var app = builder.Build();
 
