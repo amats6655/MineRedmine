@@ -1,6 +1,9 @@
 ﻿$(document).ready(function (){
     $(window).on("beforeunload", function (){
         $("#c").show();
+        setTimeout(function () {
+            $("#c").fadeOut('slow');
+        }, 1500);
     });
 });
 
