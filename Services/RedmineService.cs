@@ -10,6 +10,7 @@ namespace RedmineApp.Services
     public class RedmineService
     {
         private readonly RedmineManager? _redmineManager;
+        private readonly ILogger<RedmineService> _logger;
 
         // Добавлен конструктор по умолчанию
         public RedmineService()
@@ -17,16 +18,18 @@ namespace RedmineApp.Services
             _redmineManager = null;
         }
 
-        public RedmineService(string apiKey)
+        public RedmineService(string apiKey, ILogger<RedmineService> logger)
         {
+            _logger = logger;
             if (IsValidApiKey(apiKey))
             {
                 _redmineManager = new RedmineManager("https://sd.talantiuspeh.ru", apiKey);
             }
         }
 
-        public RedmineService(string username, string password)
+        public RedmineService(string username, string password, ILogger<RedmineService> logger)
         {
+            _logger = logger;
             if (IsValidUserCredentials(username, password))
             {
                 _redmineManager = new RedmineManager("https://sd.talantiuspeh.ru", username, password);
@@ -67,9 +70,11 @@ namespace RedmineApp.Services
             try
             {
                 await _redmineManager.UpdateObjectAsync<Issue>(issueId.ToString(), issue);
+                _logger.LogInformation("Issue status updated successfully");
             }
             catch
             {
+                
                 throw new RedmineException("You are not authorized to access this page.");
             }
         }

@@ -2,6 +2,7 @@ using AspNetCoreHero.ToastNotification;
 using RedmineApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Logging.AddFile(Path.Combine(Directory.GetCurrentDirectory(), "logger.txt"));
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddDistributedMemoryCache(); // Adds a default in-memory implementation of IDistributedCache
 builder.Services.AddSession(options =>
@@ -20,7 +21,7 @@ builder.Services.AddScoped<RedmineService>(sp =>
 
     if (!string.IsNullOrEmpty(apiKey))
     {
-        return new RedmineService(apiKey);
+        return new RedmineService(apiKey, ILogger<RedmineService> logger);
     }
     else if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
     {
