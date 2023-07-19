@@ -67,17 +67,19 @@ namespace RedmineApp.Services
             
             issue.Status = IssueStatus.Create<IssueStatus>(2);
             issue.AssignedTo = IdentifiableName.Create<IdentifiableName>(currentUser.Id);
-            try
-            {
-                await _redmineManager.UpdateObjectAsync<Issue>(issueId.ToString(), issue);
-                _logger.LogInformation("Issue status updated successfully");
+                try
+                {
+                    await _redmineManager.UpdateObjectAsync<Issue>(issueId.ToString(), issue);
+                    _logger.LogInformation($"{DateTime.Now}: Задача успешно обновлена");
+                    _logger.LogInformation($"Пользователь - {currentUser.FirstName} {currentUser.LastName}, Задача - {issue.Id}");
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning($"{DateTime.Now}: При обновлении задача возникла ошибка: \n {ex.ToString()}");
+                    _logger.LogInformation($"Пользователь - {currentUser.FirstName} {currentUser.LastName}, Задача - {issue.Id}");
+                    throw new RedmineException("You are not authorized to access this page.");
+                }
             }
-            catch
-            {
-                
-                throw new RedmineException("You are not authorized to access this page.");
-            }
-        }
 
         
         public static bool IsValidApiKey(string apiKey)

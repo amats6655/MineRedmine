@@ -18,14 +18,15 @@ builder.Services.AddScoped<RedmineService>(sp =>
     var apiKey = httpContextAccessor.HttpContext?.Session.GetString("apiKey");
     var username = httpContextAccessor.HttpContext?.Session.GetString("username");
     var password = httpContextAccessor.HttpContext?.Session.GetString("password");
+    var logger = sp.GetRequiredService<ILogger<RedmineService>>();
 
     if (!string.IsNullOrEmpty(apiKey))
     {
-        return new RedmineService(apiKey, ILogger<RedmineService> logger);
+        return new RedmineService(apiKey, logger);
     }
     else if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
     {
-        return new RedmineService(username, password);
+        return new RedmineService(username, password, logger);
     }
 
     // Возвращаем простую заглушку, если сессия недействительна
