@@ -194,6 +194,10 @@ details[open] summary {
 }
 
 
+.speech-bubble p {
+    word-wrap: break-word;
+}
+
 .custom-button{
     background-color: #527aee;
     color: #Ffffff;
