@@ -4,9 +4,10 @@
 <br/>
 <section class="wrapper">
     <div class="container">
-        <div class="detail bg-light mb-3">
+        <div class="detail bg-light mb-3" style="box-shadow: 0 0 15px 7px @GetStatusColor();">
             <div class="card-body">
                 <p><strong>Создано: </strong>@Model.CreatedOn.ToString()</p>
+                <p><strong>Приоритет: </strong>@Model.Priority.Name</p>
                 <p><strong>Заявитель: </strong>@Model.Author.Name</p>
                 <p class="card-text text-wrap"><strong>Тема: </strong>@Model.Subject</p>
                 <p><strong>Телефон: </strong>@GetPhoneNumber()</p>
@@ -36,6 +37,19 @@
 <br/><br/>
 
 @functions{
+
+    private string GetStatusColor()
+    {
+        var color = Model.Priority.Id switch
+        {
+            1 => "#23ec55",
+            2 => "#2d51c1",
+            3 => "#FF0000",
+            _ => "#000000"
+            };
+        return color;
+    }
+    
     private string GetPhoneNumber()
     {
         var phone = "Не указан";
@@ -53,7 +67,7 @@
         var location = "Не указано";
         foreach (var t in Model.CustomFields)
         {
-            if (!t.Name.Equals("Местонахождение")) continue;
+            if (!t.Name.Equals("Местоположение")) continue;
             location = t.Values[0].Info;
             break;
         }
