@@ -23,7 +23,6 @@ namespace RedmineApp.Services
             _logger = logger;
             if (IsValidApiKey(apiKey))
             {
-                _logger.LogInformation("Пользователь авторизован с помощью API ключа");
                 _redmineManager = new RedmineManager("https://sd.talantiuspeh.ru", apiKey);
             }
         }
@@ -33,7 +32,6 @@ namespace RedmineApp.Services
             _logger = logger;
             if (IsValidUserCredentials(username, password))
             {
-                _logger.LogInformation($"Пользователь {username} авторизован по логину-паролю");
                 _redmineManager = new RedmineManager("https://sd.talantiuspeh.ru", username, password);
             }
         }
