@@ -18,7 +18,7 @@ html {
 
 #c
 {
-    position: absolute;
+    position: fixed;
     left: 0; top: 0;
     width: 100%; height: 100%;
     z-index: 9999;
@@ -77,6 +77,10 @@ body {
 .card .card-footer {
     background: none;
     border-top: none;
+}
+
+.card .card-footer .align-self-start{
+    /*width: 30vh;*/
 }
 
 .card .card-footer .media img {
@@ -173,6 +177,10 @@ details[open] summary {
     font-weight: 200;
     letter-spacing: 0.5px;
     color: white;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 

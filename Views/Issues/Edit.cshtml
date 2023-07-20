@@ -22,7 +22,6 @@
 
     </div>
 </section>
-<hr/>
 
 @foreach (var t in Model.Journals)
 {
@@ -30,7 +29,7 @@
     {
         <blockquote class="speech-bubble">
           <p>@Html.Raw(t.Notes)</p>
-            <cite>@t.User.Name</cite>
+            <cite>@t.User.Name / @t.CreatedOn.ToString()</cite>
         </blockquote>
     }
 }
