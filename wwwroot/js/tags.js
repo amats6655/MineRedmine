@@ -35,3 +35,26 @@ function debounce( fn, threshold ) {
 $(window).bind("load", function() {
     $('#all').click();
 });
+
+
+
+$(function (){
+    $('#status').click(function (){
+        $('.status').toggleClass('hidden');
+        $('.priority').addClass('hidden');
+        $('#priority').removeClass('hidden');
+        $(this).toggleClass('hidden');
+    });
+    $('#priority').click(function (){
+        $('.priority').toggleClass('hidden');
+        $('.status').addClass('hidden');
+        $('#status').removeClass('hidden');
+        $(this).toggleClass('hidden')
+    });
+    $('#all').click(function (){
+        $('#priority').removeClass('hidden');
+        $('#status').removeClass('hidden');
+        $('.priority').addClass('hidden');
+        $('.status').addClass('hidden');
+    });
+});

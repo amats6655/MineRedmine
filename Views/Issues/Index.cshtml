@@ -1,25 +1,28 @@
 ﻿    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="~/js/isotope.pkgd.min.js"></script>
-    <script src="~/js/masonry.pkgd.min.js"></script>
+    <script src="~/js/tags.js"></script>
+    <style>
+        .hidden{display: none;}
+    </style>
+    @using Redmine.Net.Api.Types
+    @model List<Redmine.Net.Api.Types.Issue>
 
-<script src="~/js/tags.js"></script>
-@using Redmine.Net.Api.Types
-@model List<Redmine.Net.Api.Types.Issue>
-
-<h1 align="center">Мои задачи</h1>
-<br/>
+    <h1 align="center">Мои задачи</h1>
+        <div class="button-group filters-button-group">
+            <button class="button is-checked" id="all" data-filter="*">all <span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@Model.Count.ToString()</span></button>
+            <button class="button filter-btn" id="status">Статус</button>
+            <button class="button filter-btn" id="priority">Приоритет</button>
+            <button class="button hidden status" data-filter=".pending">В ожидании <span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@Model.Count(i => i.Status.Id == 7).ToString()</span></button>
+            <button class="button hidden status" data-filter=".in-work">В работе <span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@Model.Count(i => i.Status.Id == 2).ToString()</span></button>
+            <button class="button hidden status" data-filter=".assigned">Назначена <span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@Model.Count(i => i.Status.Id == 14).ToString()</span></button>
+            <button class="button hidden priority" data-filter=".average">Средний приоритет <span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@Model.Count(i => i.Priority.Id == 2).ToString()</span></button>
+            <button class="button hidden priority" data-filter=".high">Высокий приоритет <span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@Model.Count(i => i.Priority.Id == 3).ToString()</span></button>
+            <button class="button hidden priority" data-filter=".critical">Критический приоритет <span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@Model.Count(i => i.Priority.Id == 4).ToString()</span></button>
+            <button class="button hidden priority" data-filter=".low">Низкий приоритет <span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@Model.Count(i => i.Priority.Id == 1).ToString()</span></button>
+        </div>
+    
 
     <section id="grid-container" class="wrapper transitions-enabled fluid masonry js-masonry grid">
-                <div class="button-group filters-button-group">
-                    <button class="button is-checked" data-filter="*">all <span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@Model.Count.ToString()</span></button>
-                    <button class="button" data-filter=".pending">В ожидании <span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@Model.Count(i => i.Status.Id == 7)</span></button>
-                    <button class="button" data-filter=".in-work">В работе <span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@Model.Count(i => i.Status.Id == 2)</span></button>
-                    <button class="button" data-filter=".assigned">Назначена <span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@Model.Count(i => i.Status.Id == 14)</span></button>
-                    <button class="button" data-filter=".average">Средний приоритет <span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@Model.Count(i => i.Priority.Id == 2)</span></button>
-                    <button class="button" data-filter=".high">Высокий приоритет <span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@Model.Count(i => i.Priority.Id == 3)</span></button>
-                    <button class="button" data-filter=".critical">Критический приоритет <span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@Model.Count(i => i.Priority.Id == 4)</span></button>
-                    <button class="button" data-filter=".low">Низкий приоритет <span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@Model.Count(i => i.Priority.Id == 1)</span></button>
-                </div>
         <div class="container">
             <div class="row ">
                 @foreach (var issue in Model)
@@ -37,7 +40,7 @@
                             <div class="card text-white card-has-bg click-col">
                                 <div class="card-img-overlay d-flex flex-column" style="background-color: @color">
                                     <div class="card-body">
-                                        <small class="card-meta mb-2">@issue.Id</small>
+                                        <small class="card-meta mb-2">@issue.Id.ToString()</small>
                                         <h6 class="card-title mt-0">@issue.Subject</h6>
                                         <small><i class="far fa-clock"></i>@issue.AssignedTo.Name</small>
                                     </div>
@@ -62,7 +65,7 @@
 
 @functions{
 
-    private string GetTags(Issue issue)
+    private static string GetTags(Issue issue)
     {
         var status = issue.Status.Id switch
         {
@@ -78,12 +81,8 @@
             _ => "low"
             };
         var result = $"{status} {priority}";
+        
         return result;
-    }
-
-    private string GetCount()
-    {
-        return "";
     }
 
 }
