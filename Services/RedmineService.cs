@@ -51,7 +51,16 @@ namespace RedmineApp.Services
         public async Task<Issue> GetIssueAsync(int id)
         {
             var parameters = new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.JOURNALS } };
-            return await _redmineManager.GetObjectAsync<Issue>(id.ToString(), parameters);
+            try
+            {
+                return await _redmineManager.GetObjectAsync<Issue>(id.ToString(), parameters);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning($"{DateTime.Now}: При поиске задачи возникла ошибка: \n {ex.ToString()}");
+                throw new RedmineException("Issue Not Found");
+            }
+
         }
 
         public async Task<User> GetCurrentUserAsync()
@@ -63,9 +72,13 @@ namespace RedmineApp.Services
         public async Task TakeIssueAsync(int issueId)
             {
             var issue = await _redmineManager.GetObjectAsync<Issue>(issueId.ToString(), null);
+            if (issue.Status.Id != 7 || issue.Status.Id != 2 || issue.Status.Id != 16 || issue.Status.Id != 15 || issue.Status.Id != 14)
+            {
+                throw new RedmineException("you can't take issue to work");
+            }
             var currentUser = await GetCurrentUserAsync();
             
-            issue.Status = IssueStatus.Create<IssueStatus>(2);
+            issue.Status = IdentifiableName.Create<IssueStatus>(2);
             issue.AssignedTo = IdentifiableName.Create<IdentifiableName>(currentUser.Id);
                 try
                 {

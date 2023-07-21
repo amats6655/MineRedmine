@@ -27,6 +27,9 @@
     <_ContentIncludedByDefault Remove="wwwroot\lib\toastr\content\toastr.scss" />
     <_ContentIncludedByDefault Remove="wwwroot\lib\toastr\scripts\toastr.js" />
     <_ContentIncludedByDefault Remove="wwwroot\lib\toastr\scripts\toastr.min.js" />
+    <_ContentIncludedByDefault Remove="Views\Error\AccessDenied.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Error\Error.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Error\NotFound.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -63,6 +66,10 @@
     <Content Update="wwwroot\js\site.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
 </Project>

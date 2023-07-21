@@ -34,8 +34,20 @@ public class IssuesController : Controller
             return RedirectToAction("Index", "Login");
         }
 
-        var issue = await _redmineService.GetIssueAsync(id);
-        return View(issue);
+        try
+        {
+            var issue = await _redmineService.GetIssueAsync(id);
+            return View(issue);
+        }
+        catch (RedmineException ex)
+        {
+            if(ex.Message.Contains("Issue Not Found"))
+            {
+                _notyf.Error("Данная заявка не найдена");
+                
+            }
+            return RedirectToAction("Index");
+        }
     }
 
     [HttpPost]
@@ -58,6 +70,12 @@ public class IssuesController : Controller
             if(ex.Message.Contains("You are not authorized to access this page."))
             {
                 _notyf.Error("Нет прав для изменения этой заявки");
+                return RedirectToAction("Index");
+            }
+
+            if (ex.Message.Contains("you can't take issue to work"))
+            {
+                _notyf.Error("Ты не можешь взять в работу эту заявку");
                 return RedirectToAction("Index");
             }
             else
