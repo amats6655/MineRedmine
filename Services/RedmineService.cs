@@ -72,9 +72,9 @@ namespace RedmineApp.Services
         public async Task TakeIssueAsync(int issueId)
             {
             var issue = await _redmineManager.GetObjectAsync<Issue>(issueId.ToString(), null);
-            if (issue.Status.Id != 7 || issue.Status.Id != 2 || issue.Status.Id != 16 || issue.Status.Id != 15 || issue.Status.Id != 14)
+            if (issue.Status.Id != 7 && issue.Status.Id != 2 && issue.Status.Id != 16 && issue.Status.Id != 15 && issue.Status.Id != 14)
             {
-                throw new RedmineException("you can't take issue to work");
+                throw new RedmineException($"Ты не можешь взять в работу заявку в статусе {issue.Status.Name}");
             }
             var currentUser = await GetCurrentUserAsync();
             

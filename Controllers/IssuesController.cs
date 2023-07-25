@@ -73,9 +73,9 @@ public class IssuesController : Controller
                 return RedirectToAction("Index");
             }
 
-            if (ex.Message.Contains("you can't take issue to work"))
+            if (ex.Message.Contains("Ты не можешь взять в работу"))
             {
-                _notyf.Error("Ты не можешь взять в работу эту заявку");
+                _notyf.Error(ex.Message);
                 return RedirectToAction("Index");
             }
             else
