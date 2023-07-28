@@ -3,6 +3,7 @@ using Redmine.Net.Api;
 using Redmine.Net.Api.Async;
 using Redmine.Net.Api.Types;
 using Redmine.Net.Api.Exceptions;
+using Serilog;
 
 namespace RedmineApp.Services
 {
@@ -10,7 +11,7 @@ namespace RedmineApp.Services
     {
         
         private readonly RedmineManager? _redmineManager;
-        private readonly ILogger<RedmineService> _logger;
+        private readonly Serilog.ILogger _logger;
 
         // Добавлен конструктор по умолчанию
         public RedmineService()
@@ -18,7 +19,7 @@ namespace RedmineApp.Services
             _redmineManager = null;
         }
 
-        public RedmineService(string apiKey, ILogger<RedmineService> logger)
+        public RedmineService(string apiKey, Serilog.ILogger logger)
         {
             _logger = logger;
             if (IsValidApiKey(apiKey))
@@ -27,7 +28,7 @@ namespace RedmineApp.Services
             }
         }
 
-        public RedmineService(string username, string password, ILogger<RedmineService> logger)
+        public RedmineService(string username, string password, Serilog.ILogger logger)
         {
             _logger = logger;
             if (IsValidUserCredentials(username, password))
@@ -57,7 +58,7 @@ namespace RedmineApp.Services
             }
             catch (Exception ex)
             {
-                _logger.LogWarning($"При поиске задачи возникла ошибка: \n {ex.ToString()}");
+                _logger.Warning($"При поиске задачи возникла ошибка: {ex.Message}");
                 throw new RedmineException("Issue Not Found");
             }
 
@@ -69,29 +70,37 @@ namespace RedmineApp.Services
             return currentUser;
         }
 
-        public async Task TakeIssueAsync(int issueId)
-            {
-            var issue = await _redmineManager.GetObjectAsync<Issue>(issueId.ToString(), null);
-            var currentUser = await GetCurrentUserAsync();
-            if (issue.Status.Id != 7 && issue.Status.Id != 2 && issue.Status.Id != 16 && issue.Status.Id != 15 && issue.Status.Id != 14)
-            {
-                _logger.LogWarning($"Неудачная попытка взять в работу заявку в статусе {issue.Status.Name}. Заявка {issue.Id}, Пользователь {currentUser.FirstName} {currentUser.LastName}");
-                throw new RedmineException($"Ты не можешь взять в работу заявку в статусе {issue.Status.Name}");
-            }
-            
-            issue.Status = IdentifiableName.Create<IssueStatus>(2);
-            issue.AssignedTo = IdentifiableName.Create<IdentifiableName>(currentUser.Id);
-                try
-                {
-                    await _redmineManager.UpdateObjectAsync<Issue>(issueId.ToString(), issue);
-                    _logger.LogInformation($"Задача успешно обновлена. Пользователь - {currentUser.FirstName} {currentUser.LastName}, Задача - {issue.Id}");
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogInformation($"При обновлении задача возникла ошибка. Пользователь - {currentUser.FirstName} {currentUser.LastName}, Задача - {issue.Id} \n {ex}");
-                    throw new RedmineException("You are not authorized to access this page.");
-                }
-            }
+    public async Task TakeIssueAsync(int issueId)
+    {
+        var issue = await _redmineManager.GetObjectAsync<Issue>(issueId.ToString(), null);
+        var currentUser = await GetCurrentUserAsync();
+        if (issue.Status.Id != 7 && issue.Status.Id != 2 && issue.Status.Id != 16 && issue.Status.Id != 15 && issue.Status.Id != 14)
+        {
+            var log = _logger.ForContext("CurrentUser", new {Id = currentUser.Id, FirstName = currentUser.FirstName, LastName = currentUser.LastName}, destructureObjects: true)
+                             .ForContext("Issue", new {Id = issue.Id, Status = issue.Status.Name}, destructureObjects: true);
+            log.Warning($"Неудачная попытка взять в работу заявку в статусе {issue.Status.Name}");
+            throw new RedmineException($"Ты не можешь взять в работу заявку в статусе {issue.Status.Name}");
+        }
+
+        issue.Status = IdentifiableName.Create<IssueStatus>(2);
+        issue.AssignedTo = IdentifiableName.Create<IdentifiableName>(currentUser.Id);
+        try
+        {
+            await _redmineManager.UpdateObjectAsync<Issue>(issueId.ToString(), issue);
+            var log = _logger.ForContext("CurrentUser", new {Id = currentUser.Id, FirstName = currentUser.FirstName, LastName = currentUser.LastName}, destructureObjects: true)
+                             .ForContext("Issue", new {Id = issue.Id, Status = issue.Status.Name}, destructureObjects: true);
+            log.Information($"Задача успешно обновлена");
+        }
+        catch (Exception ex)
+        {
+            var log = _logger.ForContext("CurrentUser", new {Id = currentUser.Id, FirstName = currentUser.FirstName, LastName = currentUser.LastName}, destructureObjects: true)
+                             .ForContext("Issue", new {Id = issue.Id, Status = issue.Status}, destructureObjects: true)
+                             .ForContext("Exception", ex, destructureObjects: true);
+            log.Error($"При обновлении задача возникла ошибка");
+            throw new RedmineException("You are not authorized to access this page.");
+        }
+    }
+
 
         
         public static bool IsValidApiKey(string apiKey)

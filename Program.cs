@@ -17,8 +17,6 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 builder.Host.UseSerilog();
 
-
-builder.Logging.AddFile(Path.Combine(Directory.GetCurrentDirectory(), "logger.txt"));
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddDistributedMemoryCache(); // Adds a default in-memory implementation of IDistributedCache
 builder.Services.AddSession(options =>
@@ -34,7 +32,7 @@ builder.Services.AddScoped<RedmineService>(sp =>
     var apiKey = httpContextAccessor.HttpContext?.Session.GetString("apiKey");
     var username = httpContextAccessor.HttpContext?.Session.GetString("username");
     var password = httpContextAccessor.HttpContext?.Session.GetString("password");
-    var logger = sp.GetRequiredService<ILogger<RedmineService>>();
+    var logger = Log.Logger; 
 
     if (!string.IsNullOrEmpty(apiKey))
     {
