@@ -2,13 +2,13 @@
 using Redmine.Net.Api;
 using Redmine.Net.Api.Async;
 using Redmine.Net.Api.Types;
-using Newtonsoft.Json;
 using Redmine.Net.Api.Exceptions;
 
 namespace RedmineApp.Services
 {
     public class RedmineService
     {
+        
         private readonly RedmineManager? _redmineManager;
         private readonly ILogger<RedmineService> _logger;
 
@@ -57,7 +57,7 @@ namespace RedmineApp.Services
             }
             catch (Exception ex)
             {
-                _logger.LogWarning($"{DateTime.Now}: При поиске задачи возникла ошибка: \n {ex.ToString()}");
+                _logger.LogWarning($"При поиске задачи возникла ошибка: \n {ex.ToString()}");
                 throw new RedmineException("Issue Not Found");
             }
 
@@ -72,24 +72,23 @@ namespace RedmineApp.Services
         public async Task TakeIssueAsync(int issueId)
             {
             var issue = await _redmineManager.GetObjectAsync<Issue>(issueId.ToString(), null);
+            var currentUser = await GetCurrentUserAsync();
             if (issue.Status.Id != 7 && issue.Status.Id != 2 && issue.Status.Id != 16 && issue.Status.Id != 15 && issue.Status.Id != 14)
             {
+                _logger.LogWarning($"Неудачная попытка взять в работу заявку в статусе {issue.Status.Name}. Заявка {issue.Id}, Пользователь {currentUser.FirstName} {currentUser.LastName}");
                 throw new RedmineException($"Ты не можешь взять в работу заявку в статусе {issue.Status.Name}");
             }
-            var currentUser = await GetCurrentUserAsync();
             
             issue.Status = IdentifiableName.Create<IssueStatus>(2);
             issue.AssignedTo = IdentifiableName.Create<IdentifiableName>(currentUser.Id);
                 try
                 {
                     await _redmineManager.UpdateObjectAsync<Issue>(issueId.ToString(), issue);
-                    _logger.LogInformation($"{DateTime.Now}: Задача успешно обновлена");
-                    _logger.LogInformation($"Пользователь - {currentUser.FirstName} {currentUser.LastName}, Задача - {issue.Id}");
+                    _logger.LogInformation($"Задача успешно обновлена. Пользователь - {currentUser.FirstName} {currentUser.LastName}, Задача - {issue.Id}");
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogWarning($"{DateTime.Now}: При обновлении задача возникла ошибка: \n {ex.ToString()}");
-                    _logger.LogInformation($"Пользователь - {currentUser.FirstName} {currentUser.LastName}, Задача - {issue.Id}");
+                    _logger.LogInformation($"При обновлении задача возникла ошибка. Пользователь - {currentUser.FirstName} {currentUser.LastName}, Задача - {issue.Id} \n {ex}");
                     throw new RedmineException("You are not authorized to access this page.");
                 }
             }

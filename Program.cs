@@ -1,7 +1,23 @@
 using AspNetCoreHero.ToastNotification;
 using RedmineApp.Services;
+using Serilog;
+using Serilog.Formatting.Compact;
+using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Debug()
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+    .Enrich.FromLogContext()
+    .WriteTo.File(new CompactJsonFormatter(),
+        path: Path.Combine("logs", "log-.json"),
+        rollingInterval: RollingInterval.Day,
+        retainedFileCountLimit: 2 * 30)
+    .CreateLogger();
+builder.Host.UseSerilog();
+
+
 builder.Logging.AddFile(Path.Combine(Directory.GetCurrentDirectory(), "logger.txt"));
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddDistributedMemoryCache(); // Adds a default in-memory implementation of IDistributedCache
