@@ -32,7 +32,7 @@ builder.Services.AddScoped<RedmineService>(sp =>
     var apiKey = httpContextAccessor.HttpContext?.Session.GetString("apiKey");
     var username = httpContextAccessor.HttpContext?.Session.GetString("username");
     var password = httpContextAccessor.HttpContext?.Session.GetString("password");
-    var logger = Log.Logger; 
+    var logger = Log.Logger;
 
     if (!string.IsNullOrEmpty(apiKey))
     {
@@ -70,7 +70,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
+app.UseForwardedHeaders();
 app.UseRouting();
 
 app.UseAuthorization();

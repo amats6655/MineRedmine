@@ -15,7 +15,7 @@ public class IssuesController : Controller
         _redmineService = redmineService;
         _notyf = notyf;
     }
-
+    
     public async Task<IActionResult> Index()
     {
         if (!_redmineService.IsSessionValid())
@@ -36,7 +36,8 @@ public class IssuesController : Controller
 
         try
         {
-            var issue = await _redmineService.GetIssueAsync(id);
+            var clientIp = HttpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault();
+            var issue = await _redmineService.GetIssueAsync(id, clientIp);
             return View(issue);
         }
         catch (RedmineException ex)
@@ -60,7 +61,8 @@ public class IssuesController : Controller
 
         try
         {
-            await _redmineService.TakeIssueAsync(id);
+            var clientIp = HttpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault();
+            await _redmineService.TakeIssueAsync(id, clientIp);
             _notyf.Success("Взял в работу");
             return RedirectToAction("Index");
         }

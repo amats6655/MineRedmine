@@ -49,16 +49,21 @@ namespace RedmineApp.Services
             return orderedResult;
         }
 
-        public async Task<Issue> GetIssueAsync(int id)
+        public async Task<Issue> GetIssueAsync(int id, string? clientIp)
         {
             var parameters = new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.JOURNALS } };
+            var currentUser = await GetCurrentUserAsync();
+            var log = _logger.ForContext("CurrentUser", new {Id = currentUser.Id, FirstName = currentUser.FirstName, LastName = currentUser.LastName}, destructureObjects: true)
+                .ForContext("Issue", new {Id = id}, destructureObjects: true)
+                .ForContext("ClientIp", clientIp, destructureObjects: true);
             try
             {
+                log.Information($"Открыта задача");
                 return await _redmineManager.GetObjectAsync<Issue>(id.ToString(), parameters);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                _logger.Warning($"При поиске задачи возникла ошибка: {ex.Message}");
+                log.Warning("Возникла ошибка при поиске заявки");
                 throw new RedmineException("Issue Not Found");
             }
 
@@ -70,14 +75,15 @@ namespace RedmineApp.Services
             return currentUser;
         }
 
-    public async Task TakeIssueAsync(int issueId)
+    public async Task TakeIssueAsync(int issueId, string? clientIp)
     {
         var issue = await _redmineManager.GetObjectAsync<Issue>(issueId.ToString(), null);
         var currentUser = await GetCurrentUserAsync();
         if (issue.Status.Id != 7 && issue.Status.Id != 2 && issue.Status.Id != 16 && issue.Status.Id != 15 && issue.Status.Id != 14)
         {
             var log = _logger.ForContext("CurrentUser", new {Id = currentUser.Id, FirstName = currentUser.FirstName, LastName = currentUser.LastName}, destructureObjects: true)
-                             .ForContext("Issue", new {Id = issue.Id, Status = issue.Status.Name}, destructureObjects: true);
+                             .ForContext("Issue", new {Id = issue.Id, Status = issue.Status.Name}, destructureObjects: true)
+                             .ForContext("ClientIp", clientIp, destructureObjects: true);
             log.Warning($"Неудачная попытка взять в работу заявку в статусе {issue.Status.Name}");
             throw new RedmineException($"Ты не можешь взять в работу заявку в статусе {issue.Status.Name}");
         }
@@ -88,14 +94,16 @@ namespace RedmineApp.Services
         {
             await _redmineManager.UpdateObjectAsync<Issue>(issueId.ToString(), issue);
             var log = _logger.ForContext("CurrentUser", new {Id = currentUser.Id, FirstName = currentUser.FirstName, LastName = currentUser.LastName}, destructureObjects: true)
-                             .ForContext("Issue", new {Id = issue.Id, Status = issue.Status.Name}, destructureObjects: true);
+                             .ForContext("Issue", new {Id = issue.Id, Status = issue.Status.Name}, destructureObjects: true)
+                             .ForContext("ClientIp", clientIp, destructureObjects: true);
             log.Information($"Задача успешно обновлена");
         }
         catch (Exception ex)
         {
             var log = _logger.ForContext("CurrentUser", new {Id = currentUser.Id, FirstName = currentUser.FirstName, LastName = currentUser.LastName}, destructureObjects: true)
                              .ForContext("Issue", new {Id = issue.Id, Status = issue.Status}, destructureObjects: true)
-                             .ForContext("Exception", ex, destructureObjects: true);
+                             .ForContext("Exception", ex, destructureObjects: true)
+                             .ForContext("ClientIp", clientIp, destructureObjects: true);
             log.Error($"При обновлении задача возникла ошибка");
             throw new RedmineException("You are not authorized to access this page.");
         }
