@@ -12,6 +12,12 @@
             <button class="button is-checked" id="all" data-filter="*">all <span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@Model.Count.ToString()</span></button>
             <button class="button filter-btn" id="status">Статус</button>
             <button class="button filter-btn" id="priority">Приоритет</button>
+            <button class="button filter-btn" id="building">Объект</button>
+            
+            @foreach (var building in GetUniqueBuildings())
+            {
+                <button class="button hidden building" data-filter=".@building.Values[0].Info">@building.Values[0].Info</button>
+            }
             <button class="button hidden status" data-filter=".pending">В ожидании <span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@Model.Count(i => i.Status.Id == 7).ToString()</span></button>
             <button class="button hidden status" data-filter=".in-work">В работе <span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@Model.Count(i => i.Status.Id == 2).ToString()</span></button>
             <button class="button hidden status" data-filter=".assigned">Назначена <span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@Model.Count(i => i.Status.Id == 14).ToString()</span></button>
@@ -66,8 +72,30 @@
 
 @functions{
 
-    private static string GetTags(Issue issue)
+    private List<IssueCustomField> GetUniqueBuildings()
     {
+        List<IssueCustomField> buildings = new List<IssueCustomField>();
+        foreach (var issue in Model)
+        {
+            List<IssueCustomField> customFields = issue.CustomFields.ToList();
+            foreach (var cs in customFields)
+            {
+                if(!cs.Name.Equals("Объект Фонда")) continue;
+                buildings.Add(cs);
+            }
+        }
+        return buildings.Distinct().ToList();
+    }
+    
+    private string GetTags(Issue issue)
+    {
+        var building = "Нема";
+        foreach (var cf in issue.CustomFields)
+        {
+            if(!cf.Name.Equals("Объект Фонда")) continue;
+            building = cf.Values[0].Info.ToString();
+            break;
+        }
         var status = issue.Status.Id switch
         {
             2 => "in-work",
@@ -81,9 +109,11 @@
             4 => "critical",
             _ => "low"
             };
-        var result = $"{status} {priority}";
+        var result = $"{status} {priority} {building}";
         
         return result;
     }
 
 }
+    }
+    

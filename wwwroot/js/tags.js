@@ -42,15 +42,27 @@ $(function (){
     $('#status').click(function (){
         $('.status').toggleClass('hidden');
         $('.priority').addClass('hidden');
+        $('.building').addClass('hidden')
         $('#priority').removeClass('hidden');
+        $('#building').removeClass('hidden');
         $(this).toggleClass('hidden');
     });
     $('#priority').click(function (){
         $('.priority').toggleClass('hidden');
         $('.status').addClass('hidden');
+        $('.building').addClass('hidden');
         $('#status').removeClass('hidden');
+        $('#building').removeClass('hidden');
         $(this).toggleClass('hidden')
     });
+    $('#building').click(function (){
+        $('.building').toggleClass('hidden');
+        $('.priority').addClass('hidden');
+        $('.status').addClass('hidden');
+        $('#priority').removeClass('hidden');
+        $('#status').removeClass('hidden');
+        $(this).toggleClass('hidden');
+    })
     $('#all').click(function (){
         $('#priority').removeClass('hidden');
         $('#status').removeClass('hidden');
