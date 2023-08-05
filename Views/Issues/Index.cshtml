@@ -9,6 +9,7 @@
     @{
         var Buildings = ViewData["Buildings"] as Dictionary<int, string>;
         var UniqueBuildings = ViewData["UniqueBuildings"] as List<IssueCustomField>;
+        var IssueBuildings = ViewData["IssueBuildings"] as List<IssueCustomField>;
     }
 
     <h1 align="center">Мои задачи</h1>
@@ -20,7 +21,7 @@
             
             @foreach (var building in UniqueBuildings)
             {
-                <button class="button hidden building" data-filter=".@building.Values[0].Info">@Buildings[int.Parse(building.Values[0].Info)]</button>
+                <button class="button hidden building" data-filter=".@building.Values[0].Info">@Buildings[int.Parse(building.Values[0].Info)]<span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@IssueBuildings.Count(i => i.Values[0].Info.Equals(building.Values[0].Info))</span></button>
             }
             <button class="button hidden status" data-filter=".pending">В ожидании <span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@Model.Count(i => i.Status.Id == 7).ToString()</span></button>
             <button class="button hidden status" data-filter=".in-work">В работе <span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@Model.Count(i => i.Status.Id == 2).ToString()</span></button>

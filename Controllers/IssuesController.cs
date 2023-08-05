@@ -77,16 +77,14 @@ public class IssuesController : Controller
         }
         var issues = await _redmineService.GetIssuesAsync();
 
-        var uniqueBuildings = (
+        var issueBuildings = (
             from issue in issues 
             from cf in issue.CustomFields.ToList() 
             where cf.Name.Equals("Объект Фонда") 
-            select cf).Distinct().ToList();
-        var uniquePriority = (
-            from issue in issues
-            select issue.Priority.Name).Distinct().ToList();
-        
-        
+            select cf).ToList();
+        var uniqueBuildings = issueBuildings.Distinct().ToList();
+
+        ViewData["IssueBuildings"] = issueBuildings;
         ViewData["UniqueBuildings"] = uniqueBuildings;
         ViewData["Buildings"] = buildings;
         return View(issues);
