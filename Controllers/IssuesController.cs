@@ -1,6 +1,7 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using Redmine.Net.Api.Exceptions;
+using Redmine.Net.Api.Types;
 using RedmineApp.Services;
 
 namespace RedmineApp.Controllers;
@@ -18,12 +19,76 @@ public class IssuesController : Controller
     
     public async Task<IActionResult> Index()
     {
+        var buildings = new Dictionary<int, string>()
+        {
+            {347, "Автодром"},
+            {224, "Административные здания"},
+            {226, "Айсберг"},
+            {262, "Академия единоборств"},
+            {481, "Альфа 4*"},
+            {369, "Альфа Заповедный квартал"},
+            {368, "Альфа Морской квартал"},
+            {483, "Альфа Морской порт"},
+            {371, "Альфа Парковый квартал"},
+            {370, "Альфа Прибрежный квартал"},
+            {227, "Парусная"},
+            {256, "Бассейн на Воскресенской"},
+            {228, "Гамма Сириус"},
+            {351, "ГК Академии Единоборств"},
+            {223, "Дельта"},
+            {229, "Детский сад (Кампус)"},
+            {482, "Детский сад (Континентальный)"},
+            {231, "Детский сад (Фигурная)"},
+            {232, "Детский сад (Общинная)"},
+            {230, "Детсуий сад (Воскресенская)"},
+            {233, "Кампус"},
+            {234, "Комплекс трамплинов"},
+            {261, "Концертный комплекс"},
+            {235, "Корпус Спорт"},
+            {254, "Корпус Школа"},
+            {237, "Лицей на Воскресенской"},
+            {236, "Лицей на Международной"},
+            {353, "Медцентр Академии Единоборств"},
+            {314, "Московский офис"},
+            {239, "Олимпийский парк (площадь)"},
+            {240, "Омега Сириус"},
+            {241, "Отель Пульсар"},
+            {238, "Парк Науки и Искусства"},
+            {242, "Планетарий в Олимпийском парке"},
+            {315, "Санкт-Петербургский офиса"},
+            {255, "Санно-бобслейная трасса"},
+            {243, "Сигма А"},
+            {244, "Сигма Б"},
+            {245, "Сигма В, Г"},
+            {246, "Сириус-Арена"},
+            {247, "Склады РЖД"},
+            {248, "Спортивный парк (мыс Адлер)"},
+            {249, "Тренировочная арена (ТАХШ)"},
+            {250, "Тренировочный центр (ТЦФК)"},
+            {251, "Хостел S Hostel"},
+            {352, "ЦПС Академии Единоборств"},
+            {252, "Шайба"},
+            {253, "Школа №38"}
+        };
+        
         if (!_redmineService.IsSessionValid())
         {
             return RedirectToAction("Index", "Login");
         }
-
         var issues = await _redmineService.GetIssuesAsync();
+
+        var uniqueBuildings = (
+            from issue in issues 
+            from cf in issue.CustomFields.ToList() 
+            where cf.Name.Equals("Объект Фонда") 
+            select cf).Distinct().ToList();
+        var uniquePriority = (
+            from issue in issues
+            select issue.Priority.Name).Distinct().ToList();
+        
+        
+        ViewData["UniqueBuildings"] = uniqueBuildings;
+        ViewData["Buildings"] = buildings;
         return View(issues);
     }
 

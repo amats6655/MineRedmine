@@ -66,7 +66,10 @@ $(function (){
     $('#all').click(function (){
         $('#priority').removeClass('hidden');
         $('#status').removeClass('hidden');
+        $('#building').removeClass('hidden');
         $('.priority').addClass('hidden');
         $('.status').addClass('hidden');
+        $('.building').addClass('hidden');
+        
     });
 });
