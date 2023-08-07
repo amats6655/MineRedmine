@@ -13,7 +13,7 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.File(new CompactJsonFormatter(),
         path: Path.Combine("logs", "log-.json"),
         rollingInterval: RollingInterval.Day,
-        retainedFileCountLimit: 2 * 30)
+        retainedFileCountLimit: 3 * 30)
     .CreateLogger();
 builder.Host.UseSerilog();
 
