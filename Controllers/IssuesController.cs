@@ -85,7 +85,7 @@ public class IssuesController : Controller
             issues = await _redmineService.GetIssuesAsync();
             var cacheEntryOptions = new MemoryCacheEntryOptions
             {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5) // Кеширование на 10 минут
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(2) // Кеширование на 2 минуты
             };
             _cache.Set("UserIssues", issues, cacheEntryOptions);
         }
