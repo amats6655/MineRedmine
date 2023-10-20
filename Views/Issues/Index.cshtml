@@ -1,6 +1,6 @@
-﻿    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/js/isotope.pkgd.min.js"></script>
+﻿
     <script src="~/js/tags.js"></script>
+    
     <style>
         .hidden{display: none;}
     </style>
@@ -13,24 +13,82 @@
     }
 
     <h1 align="center">Мои задачи</h1>
-        <div class="button-group filters-button-group">
-            <button class="button is-checked" id="all" data-filter="*">all <span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@Model.Count.ToString()</span></button>
-            <button class="button filter-btn" id="status">Статус</button>
-            <button class="button filter-btn" id="priority">Приоритет</button>
-            <button class="button filter-btn" id="building">Объект</button>
-            
-            @foreach (var building in UniqueBuildings)
-            {
-                <button class="button hidden building" data-filter=".@building.Values[0].Info">@Buildings[int.Parse(building.Values[0].Info)]<span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@IssueBuildings.Count(i => i.Values[0].Info.Equals(building.Values[0].Info))</span></button>
-            }
-            <button class="button hidden status" data-filter=".pending">В ожидании <span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@Model.Count(i => i.Status.Id == 7).ToString()</span></button>
-            <button class="button hidden status" data-filter=".in-work">В работе <span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@Model.Count(i => i.Status.Id == 2).ToString()</span></button>
-            <button class="button hidden status" data-filter=".assigned">Назначена <span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@Model.Count(i => i.Status.Id == 14).ToString()</span></button>
-            <button class="button hidden priority" data-filter=".average">Средний<span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@Model.Count(i => i.Priority.Id == 2).ToString()</span></button>
-            <button class="button hidden priority" data-filter=".high">Высокий<span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@Model.Count(i => i.Priority.Id == 3).ToString()</span></button>
-            <button class="button hidden priority" data-filter=".critical">Критический<span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@Model.Count(i => i.Priority.Id == 4).ToString()</span></button>
-            <button class="button hidden priority" data-filter=".low">Низкий<span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@Model.Count(i => i.Priority.Id == 1).ToString()</span></button>
+    
+    
+    <!-- Кнопка для открытия модального окна -->
+    <button id="openFilterPopup" class="filter-popup-btn">
+        <img src="images/filter.png" width="40" alt="Filters"/>
+    </button>
+    
+    <!-- Модальное окно -->
+    
+    <div id="filterPopup" class="filter-popup">
+        
+        <button class="button" id="all" data-filter="*">all <span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@Model.Count.ToString()</span></button>
+        <div class="dropdown dropend">
+            <button class="button dropdown-toggle filter-btn" type="button" id="statusDropdown" data-bs-toggle="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Статус</button>
+            <div class="dropdown-menu" aria-labelledby="statusDropdown">
+                <div class="dropdown-item">
+                    <label>
+                        <input type="checkbox" class="filter-checkbox d-none" data-group="status" data-filter=".pending"/> В ожидании<span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@Model.Count(i => i.Status.Id == 7).ToString()</span>
+                    </label>
+                </div>
+                <div class="dropdown-item">
+                    <label>
+                        <input type="checkbox" class="filter-checkbox d-none" data-group="status" data-filter=".in-work"/>В работе<span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@Model.Count(i => i.Status.Id == 2).ToString()</span>
+                    </label>
+                </div>
+                <div class="dropdown-item">
+                    <label>
+                        <input type="checkbox" class="filter-checkbox d-none" data-group="status" data-filter=".assigned"/>Назначена<span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@Model.Count(i => i.Status.Id == 14).ToString()</span>
+                    </label>
+                </div>
+            </div>
         </div>
+        <div class="dropdown dropend">
+            <button class="button dropdown-toggle filter-btn" type="button" id="priorityDropdownButton" data-bs-toggle="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Приоритет</button>
+            <div class="dropdown-menu" aria-labelledby="priorityDropdown">
+                <div class="dropdown-item">
+                    <label>
+                        <input type="checkbox" class="filter-checkbox d-none" data-group="priority" data-filter=".low"/>Низкий<span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@Model.Count(i => i.Priority.Id == 1).ToString()</span>
+                    </label>
+                </div>
+                <div class="dropdown-item">
+                    <label>
+                        <input type="checkbox" class="filter-checkbox d-none" data-group="priority" data-filter=".average"/>Средний<span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@Model.Count(i => i.Priority.Id == 2).ToString()</span>
+                    </label>
+                </div>
+                <div class="dropdown-item">
+                    <label>
+                        <input type="checkbox" class="filter-checkbox d-none" data-group="priority" data-filter=".high">Высокий<span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@Model.Count(i => i.Priority.Id == 3).ToString()</span>
+                    </label>
+                </div>
+                <div class="dropdown-item">
+                    <label>
+                        <input type="checkbox" class="filter-checkbox d-none" data-group="priority" data-filter=".critical">Критический<span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@Model.Count(i => i.Priority.Id == 4).ToString()</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="dropdown dropend">
+            <button class="button dropdown-toggle filter-btn" type="button" id="buildingDropdown" data-bs-toggle="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Объект</button>
+            <div class="dropdown-menu" aria-labelledby="buildingDropdown">
+                @foreach (var building in UniqueBuildings)
+                {
+                    <div class="dropdown-item">
+                        <label>
+                            <input type="checkbox" class="filter-checkbox d-none" data-group="building" data-filter=".@building.Values[0].Info">@Buildings[int.Parse(building.Values[0].Info)]<span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@IssueBuildings.Count(i => i.Values[0].Info.Equals(building.Values[0].Info))</span>
+                        </label>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Кнопка для закрытия модального окна -->
+        <button id="closeFilterPopup" class="close-btn">Закрыть</button>
+    </div>
+
+
     
 
     <section id="grid-container" class="wrapper transitions-enabled fluid masonry js-masonry grid">
@@ -104,4 +162,4 @@
     }
 
 }
-    
+
