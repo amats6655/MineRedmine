@@ -1,4 +1,5 @@
 using AspNetCoreHero.ToastNotification;
+using Microsoft.Extensions.Caching.Memory;
 using RedmineApp.Services;
 using Serilog;
 using Serilog.Formatting.Compact;
@@ -21,7 +22,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddDistributedMemoryCache(); // Adds a default in-memory implementation of IDistributedCache
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromDays(7); // Session timeout
+    options.IdleTimeout = TimeSpan.FromDays(2); // Session timeout
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
@@ -33,18 +34,20 @@ builder.Services.AddScoped<RedmineService>(sp =>
     var username = httpContextAccessor.HttpContext?.Session.GetString("username");
     var password = httpContextAccessor.HttpContext?.Session.GetString("password");
     var logger = Log.Logger;
+    var cache = sp.GetRequiredService<IMemoryCache>();
+    
 
     if (!string.IsNullOrEmpty(apiKey))
     {
-        return new RedmineService(apiKey, logger);
+        return new RedmineService(apiKey, logger, cache);
     }
     else if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
     {
-        return new RedmineService(username, password, logger);
+        return new RedmineService(username, password, logger, cache);
     }
 
     // Возвращаем простую заглушку, если сессия недействительна
-    return new RedmineService();
+    return new RedmineService(cache);
 });
 
 // Add services to the container.

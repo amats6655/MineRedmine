@@ -1,4 +1,5 @@
 ﻿using System.Collections.Specialized;
+using Microsoft.Extensions.Caching.Memory;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Async;
 using Redmine.Net.Api.Types;
@@ -12,15 +13,18 @@ namespace RedmineApp.Services
         
         private readonly RedmineManager? _redmineManager;
         private readonly Serilog.ILogger _logger;
+        private readonly IMemoryCache _cache;
 
         // Добавлен конструктор по умолчанию
-        public RedmineService()
+        public RedmineService(IMemoryCache cache)
         {
+            _cache = cache;
             _redmineManager = null;
         }
 
-        public RedmineService(string apiKey, Serilog.ILogger logger)
+        public RedmineService(string apiKey, Serilog.ILogger logger, IMemoryCache cache) : this(cache)
         {
+            _cache = cache;
             _logger = logger;
             if (IsValidApiKey(apiKey))
             {
@@ -28,8 +32,9 @@ namespace RedmineApp.Services
             }
         }
 
-        public RedmineService(string username, string password, Serilog.ILogger logger)
+        public RedmineService(string username, string password, Serilog.ILogger logger, IMemoryCache cache) : this(cache)
         {
+            _cache = cache;
             _logger = logger;
             if (IsValidUserCredentials(username, password))
             {
@@ -39,14 +44,17 @@ namespace RedmineApp.Services
 
         public async Task<List<Issue>> GetIssuesAsync()
         {
-            var parameters = new NameValueCollection
+            return await _cache.GetOrCreateAsync("UserIssues", async entry =>
             {
-                {RedmineKeys.ASSIGNED_TO_ID, "me"},
-                {RedmineKeys.STATUS_ID, "7|14|2"}
-            };
-            var result = await _redmineManager.GetObjectsAsync<Issue>(parameters);
-            var orderedResult = result.OrderByDescending(issue => issue.UpdatedOn).ToList();
-            return orderedResult;
+                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10); // Кеширование на 10 минут
+                var parameters = new NameValueCollection
+                {
+                    {RedmineKeys.ASSIGNED_TO_ID, "me"},
+                    {RedmineKeys.STATUS_ID, "7|14|2"}
+                };
+                var result = await _redmineManager.GetObjectsAsync<Issue>(parameters);
+                return result.OrderByDescending(issue => issue.UpdatedOn).ToList();
+            });
         }
 
         public async Task<Issue> GetIssueAsync(int id, string? clientIp)

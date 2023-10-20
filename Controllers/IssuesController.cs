@@ -1,5 +1,6 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Types;
 using RedmineApp.Services;
@@ -10,11 +11,13 @@ public class IssuesController : Controller
 {
     private readonly RedmineService _redmineService;
     private readonly INotyfService _notyf;
+    private readonly IMemoryCache _cache;
 
-    public IssuesController(RedmineService redmineService, INotyfService notyf)
+    public IssuesController(RedmineService redmineService, INotyfService notyf, IMemoryCache cache)
     {
         _redmineService = redmineService;
         _notyf = notyf;
+        _cache = cache;
     }
     
     public async Task<IActionResult> Index()
@@ -75,8 +78,17 @@ public class IssuesController : Controller
         {
             return RedirectToAction("Index", "Login");
         }
-        var issues = await _redmineService.GetIssuesAsync();
-
+            
+        // Попробовать получить список задач из кэша
+        if (!_cache.TryGetValue("UserIssues", out List<Issue> issues))
+        {
+            issues = await _redmineService.GetIssuesAsync();
+            var cacheEntryOptions = new MemoryCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5) // Кеширование на 10 минут
+            };
+            _cache.Set("UserIssues", issues, cacheEntryOptions);
+        }
         var issueBuildings = (
             from issue in issues 
             from cf in issue.CustomFields.ToList() 

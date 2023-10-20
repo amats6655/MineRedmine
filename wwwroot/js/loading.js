@@ -1,13 +1,9 @@
-﻿$(document).ready(function (){
-    $(window).on("beforeunload", function (){
-        $("#c").show();
-        setTimeout(function () {
-            $("#c").fadeOut('slow');
-        }, 5000);
-    });
+﻿$(document).ready(function() {
+    $("#c").show();
 });
 
-$(window).on("load", function (){
+// Когда страница полностью загружена, скрыть элемент #c
+$(window).on("load", function() {
     $("#c").fadeOut('slow');
 });
 
