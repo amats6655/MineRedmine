@@ -10,7 +10,7 @@
                 <p><strong>Приоритет: </strong>@Model.Priority.Name</p>
                 <p><strong>Заявитель: </strong>@Model.Author.Name</p>
                 <p class="card-text text-wrap"><strong>Тема: </strong>@Model.Subject</p>
-                <p><strong>Телефон: </strong>@GetPhoneNumber()</p>
+                <p><strong>Телефон: <a href="tel:@GetPhoneNumber()">@GetPhoneNumber()</a></strong></p>
                 <p><strong>Местоположение: </strong>@GetLocation()</p>
                 <p><strong>Описание: </strong><br/>@Html.Raw(Model.Description)</p>
             </div>
