@@ -13,10 +13,10 @@ html {
 
 
 body {
-    background: #23EC55;
-    background: -webkit-radial-gradient(top right, #23EC55, #2D51C1);
-    background: -moz-radial-gradient(top right, #23EC55, #2D51C1);
-    background: radial-gradient(to bottom left, #23EC55, #2D51C1);
+    background: #e8f4fc;
+    background: -webkit-radial-gradient(top right, #e8f4fc, #faf3e0);
+    background: -moz-radial-gradient(top right, #e8f4fc, #faf3e0);
+    background: radial-gradient(to bottom left, #e8f4fc, #faf3e0);
 }
 
 .wrapper {
@@ -173,7 +173,7 @@ details[open] summary {
     font-style: normal;
     font-weight: 200;
     letter-spacing: 0.5px;
-    color: white;
+    color: #333;
     display: -webkit-box;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
@@ -261,7 +261,7 @@ details[open] summary {
     padding: 10px 10px;
     background-color: #527aee;
     border: 1px solid #ffffff;
-    box-shadow: 0 0 15px 5px #0dcaf0;
+    box-shadow: 0 0 5px 3px rgba(13, 202, 240, 0.61);
     color: #fff;
     border-radius: 20px;
     z-index: 1001;
