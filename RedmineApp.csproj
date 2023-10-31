@@ -8,6 +8,7 @@
     <Authors>mr.Kotik</Authors>
     <Company>mrKotik</Company>
     <Product>MineRedmine</Product>
+    <ApplicationIcon>wwwroot\favicon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -35,6 +36,11 @@
     <_ContentIncludedByDefault Remove="Views\Error\AccessDenied.cshtml" />
     <_ContentIncludedByDefault Remove="Views\Error\Error.cshtml" />
     <_ContentIncludedByDefault Remove="Views\Error\NotFound.cshtml" />
+    <_ContentIncludedByDefault Remove="logs\log-20230802.json" />
+    <_ContentIncludedByDefault Remove="logs\log-20230803.json" />
+    <_ContentIncludedByDefault Remove="logs\log-20230804.json" />
+    <_ContentIncludedByDefault Remove="logs\log-20231020.json" />
+    <_ContentIncludedByDefault Remove="logs\log-20231029.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -71,10 +77,23 @@
     <Content Update="wwwroot\js\site.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Remove="logs\**" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Views\Issues\filters\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="logs\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="logs\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="logs\**" />
   </ItemGroup>
 
 </Project>
