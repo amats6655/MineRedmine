@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()
-    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Fatal)
     .Enrich.FromLogContext()
     .WriteTo.File(new CompactJsonFormatter(),
         path: Path.Combine("logs", "log-.json"),
