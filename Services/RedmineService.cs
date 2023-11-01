@@ -42,8 +42,15 @@ namespace RedmineApp.Services
             }
         }
 
-        public async Task<List<Issue>> GetIssuesAsync()
+        public async Task<List<Issue>?> GetIssuesAsync(string? clientIp)
         {
+            var currentUser = await GetCurrentUserAsync();
+            var log = _logger.ForContext("CurrentUser",
+                    new { Id = currentUser.Id, FirstName = currentUser.FirstName, LastName = currentUser.LastName },
+                    destructureObjects: true)
+                .ForContext("Issue", new { Id = 0 }, destructureObjects: true)
+                .ForContext("ClientIp", clientIp, destructureObjects: true);
+            
             return await _cache.GetOrCreateAsync("UserIssues", async entry =>
             {
                 entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10); // Кеширование на 10 минут
@@ -53,6 +60,7 @@ namespace RedmineApp.Services
                     {RedmineKeys.STATUS_ID, "7|14|2"}
                 };
                 var result = await _redmineManager.GetObjectsAsync<Issue>(parameters);
+                log.Information("Получен список заявок");
                 return result.OrderByDescending(issue => issue.UpdatedOn).ToList();
             });
         }

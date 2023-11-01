@@ -80,12 +80,13 @@ public class IssuesController : Controller
         }
             
         // Попробовать получить список задач из кэша
-        if (!_cache.TryGetValue("UserIssues", out List<Issue> issues))
+        if (!_cache.TryGetValue("UserIssues", out List<Issue>? issues))
         {
-            issues = await _redmineService.GetIssuesAsync();
+            var clientIp = HttpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault();
+            issues = await _redmineService.GetIssuesAsync(clientIp);
             var cacheEntryOptions = new MemoryCacheEntryOptions
             {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(2) // Кеширование на 2 минуты
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1) // Кеширование на 2 минуты
             };
             _cache.Set("UserIssues", issues, cacheEntryOptions);
         }
