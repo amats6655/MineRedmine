@@ -63,6 +63,25 @@ body {
 
 }
 
+.location{
+    max-width: 9vh;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-left: 11.5vh;
+}
+
+.author{
+    width: 50%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.status{
+    margin-left: 9vh;
+}
+
 .align-self-start{
     display: -webkit-box;
     -webkit-line-clamp: 2;

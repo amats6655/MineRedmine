@@ -24,23 +24,23 @@
     
     <div id="filterPopup" class="filter-popup">
         
-        <button class="button" id="all" data-filter="*">all <span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@Model.Count.ToString()</span></button>
+        <button class="button" id="all" data-filter="*">all <span class="badge bg-info"> @Model.Count.ToString()</span></button>
         <div class="dropdown dropend">
             <button class="button dropdown-toggle filter-btn" type="button" id="statusDropdown" data-bs-toggle="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Статус</button>
             <div class="dropdown-menu" aria-labelledby="statusDropdown">
                 <div class="dropdown-item">
                     <label>
-                        <input type="checkbox" class="filter-checkbox d-none" data-group="status" data-filter=".pending"/> В ожидании<span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@Model.Count(i => i.Status.Id == 7).ToString()</span>
+                        <input type="checkbox" class="filter-checkbox d-none" data-group="status" data-filter=".pending"/> В ожидании <span class="badge bg-info">@Model.Count(i => i.Status.Id == 7).ToString()</span>
                     </label>
                 </div>
                 <div class="dropdown-item">
                     <label>
-                        <input type="checkbox" class="filter-checkbox d-none" data-group="status" data-filter=".in-work"/>В работе<span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@Model.Count(i => i.Status.Id == 2).ToString()</span>
+                        <input type="checkbox" class="filter-checkbox d-none" data-group="status" data-filter=".in-work"/>В работе <span class="badge bg-info">@Model.Count(i => i.Status.Id == 2).ToString()</span>
                     </label>
                 </div>
                 <div class="dropdown-item">
                     <label>
-                        <input type="checkbox" class="filter-checkbox d-none" data-group="status" data-filter=".assigned"/>Назначена<span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@Model.Count(i => i.Status.Id == 14).ToString()</span>
+                        <input type="checkbox" class="filter-checkbox d-none" data-group="status" data-filter=".assigned"/>Назначена <span class="badge bg-info">@Model.Count(i => i.Status.Id == 14).ToString()</span>
                     </label>
                 </div>
             </div>
@@ -50,22 +50,22 @@
             <div class="dropdown-menu" aria-labelledby="priorityDropdown">
                 <div class="dropdown-item">
                     <label>
-                        <input type="checkbox" class="filter-checkbox d-none" data-group="priority" data-filter=".low"/>Низкий<span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@Model.Count(i => i.Priority.Id == 1).ToString()</span>
+                        <input type="checkbox" class="filter-checkbox d-none" data-group="priority" data-filter=".low"/>Низкий <span class="badge bg-info">@Model.Count(i => i.Priority.Id == 1).ToString()</span>
                     </label>
                 </div>
                 <div class="dropdown-item">
                     <label>
-                        <input type="checkbox" class="filter-checkbox d-none" data-group="priority" data-filter=".average"/>Средний<span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@Model.Count(i => i.Priority.Id == 2).ToString()</span>
+                        <input type="checkbox" class="filter-checkbox d-none" data-group="priority" data-filter=".average"/>Средний <span class="badge bg-info">@Model.Count(i => i.Priority.Id == 2).ToString()</span>
                     </label>
                 </div>
                 <div class="dropdown-item">
                     <label>
-                        <input type="checkbox" class="filter-checkbox d-none" data-group="priority" data-filter=".high">Высокий<span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@Model.Count(i => i.Priority.Id == 3).ToString()</span>
+                        <input type="checkbox" class="filter-checkbox d-none" data-group="priority" data-filter=".high">Высокий <span class="badge bg-info">@Model.Count(i => i.Priority.Id == 3).ToString()</span>
                     </label>
                 </div>
                 <div class="dropdown-item">
                     <label>
-                        <input type="checkbox" class="filter-checkbox d-none" data-group="priority" data-filter=".critical">Критический<span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@Model.Count(i => i.Priority.Id == 4).ToString()</span>
+                        <input type="checkbox" class="filter-checkbox d-none" data-group="priority" data-filter=".critical">Критический <span class="badge bg-info">@Model.Count(i => i.Priority.Id == 4).ToString()</span>
                     </label>
                 </div>
             </div>
@@ -77,7 +77,7 @@
                 {
                     <div class="dropdown-item">
                         <label>
-                            <input type="checkbox" class="filter-checkbox d-none" data-group="building" data-filter=".@building.Values[0].Info">@Buildings[int.Parse(building.Values[0].Info)]<span class="bg-info text-white rounded-circle px-2 py-1 mx-2">@IssueBuildings.Count(i => i.Values[0].Info.Equals(building.Values[0].Info))</span>
+                            <input type="checkbox" class="filter-checkbox d-none" data-group="building" data-filter=".@building.Values[0].Info">@Buildings[int.Parse(building.Values[0].Info)] <span class="badge bg-info">@IssueBuildings.Count(i => i.Values[0].Info.Equals(building.Values[0].Info))</span>
                         </label>
                     </div>
                 }
@@ -114,12 +114,20 @@
                                         <h6 class="card-title mt-0">@issue.Subject</h6>
                                         <small><i class="far fa-clock"></i>@issue.AssignedTo.Name</small>
                                     </div>
-                                    <div class="card-footer d-flex justify-content-between">
+                                    <li class="list-group-item d-flex">
                                         <div class="align-self-start">
+                                            <h6 class="my-0 text-white d-block">Местоположение:</h6>
+                                        </div>
+                                        <div class="align-self-end location">
+                                            <small>@GetLocation(issue)</small>
+                                        </div>
+                                    </li>
+                                    <div class="card-footer d-flex">
+                                        <div class="align-self-start author">
                                             <h6 class="my-0 text-white d-block">Заявитель</h6>
                                             <small>@issue.Author.Name</small>
                                         </div>
-                                        <div class="align-self-end">
+                                        <div class="align-self-end status">
                                             <h6 class="my-0 text-white d-block">Статус</h6>
                                             <small>@issue.Status.Name</small>
                                         </div>
@@ -159,6 +167,17 @@
         var result = $"{status} {priority} {building}";
 
         return result;
+    }
+    private string GetLocation(Issue issue)
+    {
+        var location = "Не указано";
+        foreach (var t in issue.CustomFields)
+        {
+            if (!t.Name.Equals("Местоположение")) continue;
+            location = t.Values[0].Info;
+            break;
+        }
+        return location;
     }
 
 }
