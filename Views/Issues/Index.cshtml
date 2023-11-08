@@ -16,76 +16,81 @@
     
     
     <!-- Кнопка для открытия модального окна -->
-    <button id="openFilterPopup" class="filter-popup-btn">
+    <button type="button" class="filter-popup-btn btn btn-primary" data-bs-target="#filterPopup" data-bs-toggle="modal">
         <img src="images/filter.png" width="40" alt="Filters"/>
     </button>
     
     <!-- Модальное окно -->
-    
-    <div id="filterPopup" class="filter-popup">
-        
-        <button class="button" id="all" data-filter="*">all <span class="badge bg-info"> @Model.Count.ToString()</span></button>
-        <div class="dropdown dropend">
-            <button class="button dropdown-toggle filter-btn" type="button" id="statusDropdown" data-bs-toggle="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Статус</button>
-            <div class="dropdown-menu" aria-labelledby="statusDropdown">
-                <div class="dropdown-item">
-                    <label>
-                        <input type="checkbox" class="filter-checkbox d-none" data-group="status" data-filter=".pending"/> В ожидании <span class="badge bg-info">@Model.Count(i => i.Status.Id == 7).ToString()</span>
-                    </label>
+    <div id="filterPopup" class="modal fade" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLablel">Фильтры</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="dropdown-item">
-                    <label>
-                        <input type="checkbox" class="filter-checkbox d-none" data-group="status" data-filter=".in-work"/>В работе <span class="badge bg-info">@Model.Count(i => i.Status.Id == 2).ToString()</span>
-                    </label>
-                </div>
-                <div class="dropdown-item">
-                    <label>
-                        <input type="checkbox" class="filter-checkbox d-none" data-group="status" data-filter=".assigned"/>Назначена <span class="badge bg-info">@Model.Count(i => i.Status.Id == 14).ToString()</span>
-                    </label>
+                <div class="modal-body">
+                                <button class="button" id="all" data-filter="*">all <span class="badge bg-info"> @Model.Count.ToString()</span></button>
+                                <div class="dropdown dropend">
+                                    <button class="button dropdown-toggle filter-btn" type="button" id="statusDropdown" data-bs-toggle="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Статус</button>
+                                    <div class="dropdown-menu" aria-labelledby="statusDropdown">
+                                        <div class="dropdown-item">
+                                            <label>
+                                                <input type="checkbox" class="filter-checkbox d-none" data-group="status" data-filter=".pending"/> В ожидании <span class="badge bg-info">@Model.Count(i => i.Status.Id == 7).ToString()</span>
+                                            </label>
+                                        </div>
+                                        <div class="dropdown-item">
+                                            <label>
+                                                <input type="checkbox" class="filter-checkbox d-none" data-group="status" data-filter=".in-work"/>В работе <span class="badge bg-info">@Model.Count(i => i.Status.Id == 2).ToString()</span>
+                                            </label>
+                                        </div>
+                                        <div class="dropdown-item">
+                                            <label>
+                                                <input type="checkbox" class="filter-checkbox d-none" data-group="status" data-filter=".assigned"/>Назначена <span class="badge bg-info">@Model.Count(i => i.Status.Id == 14).ToString()</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dropdown dropend">
+                                    <button class="button dropdown-toggle filter-btn" type="button" id="priorityDropdownButton" data-bs-toggle="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Приоритет</button>
+                                    <div class="dropdown-menu" aria-labelledby="priorityDropdown">
+                                        <div class="dropdown-item">
+                                            <label>
+                                                <input type="checkbox" class="filter-checkbox d-none" data-group="priority" data-filter=".low"/>Низкий <span class="badge bg-info">@Model.Count(i => i.Priority.Id == 1).ToString()</span>
+                                            </label>
+                                        </div>
+                                        <div class="dropdown-item">
+                                            <label>
+                                                <input type="checkbox" class="filter-checkbox d-none" data-group="priority" data-filter=".average"/>Средний <span class="badge bg-info">@Model.Count(i => i.Priority.Id == 2).ToString()</span>
+                                            </label>
+                                        </div>
+                                        <div class="dropdown-item">
+                                            <label>
+                                                <input type="checkbox" class="filter-checkbox d-none" data-group="priority" data-filter=".high">Высокий <span class="badge bg-info">@Model.Count(i => i.Priority.Id == 3).ToString()</span>
+                                            </label>
+                                        </div>
+                                        <div class="dropdown-item">
+                                            <label>
+                                                <input type="checkbox" class="filter-checkbox d-none" data-group="priority" data-filter=".critical">Критический <span class="badge bg-info">@Model.Count(i => i.Priority.Id == 4).ToString()</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dropdown dropend">
+                                    <button class="button dropdown-toggle filter-btn" type="button" id="buildingDropdown" data-bs-toggle="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Объект</button>
+                                    <div class="dropdown-menu" aria-labelledby="buildingDropdown">
+                                        @foreach (var building in UniqueBuildings)
+                                        {
+                                            <div class="dropdown-item">
+                                                <label>
+                                                    <input type="checkbox" class="filter-checkbox d-none" data-group="building" data-filter=".@building.Values[0].Info">@Buildings[int.Parse(building.Values[0].Info)] <span class="badge bg-info">@IssueBuildings.Count(i => i.Values[0].Info.Equals(building.Values[0].Info))</span>
+                                                </label>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
                 </div>
             </div>
         </div>
-        <div class="dropdown dropend">
-            <button class="button dropdown-toggle filter-btn" type="button" id="priorityDropdownButton" data-bs-toggle="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Приоритет</button>
-            <div class="dropdown-menu" aria-labelledby="priorityDropdown">
-                <div class="dropdown-item">
-                    <label>
-                        <input type="checkbox" class="filter-checkbox d-none" data-group="priority" data-filter=".low"/>Низкий <span class="badge bg-info">@Model.Count(i => i.Priority.Id == 1).ToString()</span>
-                    </label>
-                </div>
-                <div class="dropdown-item">
-                    <label>
-                        <input type="checkbox" class="filter-checkbox d-none" data-group="priority" data-filter=".average"/>Средний <span class="badge bg-info">@Model.Count(i => i.Priority.Id == 2).ToString()</span>
-                    </label>
-                </div>
-                <div class="dropdown-item">
-                    <label>
-                        <input type="checkbox" class="filter-checkbox d-none" data-group="priority" data-filter=".high">Высокий <span class="badge bg-info">@Model.Count(i => i.Priority.Id == 3).ToString()</span>
-                    </label>
-                </div>
-                <div class="dropdown-item">
-                    <label>
-                        <input type="checkbox" class="filter-checkbox d-none" data-group="priority" data-filter=".critical">Критический <span class="badge bg-info">@Model.Count(i => i.Priority.Id == 4).ToString()</span>
-                    </label>
-                </div>
-            </div>
-        </div>
-        <div class="dropdown dropend">
-            <button class="button dropdown-toggle filter-btn" type="button" id="buildingDropdown" data-bs-toggle="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Объект</button>
-            <div class="dropdown-menu" aria-labelledby="buildingDropdown">
-                @foreach (var building in UniqueBuildings)
-                {
-                    <div class="dropdown-item">
-                        <label>
-                            <input type="checkbox" class="filter-checkbox d-none" data-group="building" data-filter=".@building.Values[0].Info">@Buildings[int.Parse(building.Values[0].Info)] <span class="badge bg-info">@IssueBuildings.Count(i => i.Values[0].Info.Equals(building.Values[0].Info))</span>
-                        </label>
-                    </div>
-                }
-            </div>
-        </div>
-
-        <!-- Кнопка для закрытия модального окна -->
-        <button id="closeFilterPopup" class="close-btn">Закрыть</button>
     </div>
 
 
