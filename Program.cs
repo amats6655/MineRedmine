@@ -72,7 +72,13 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions()
+{
+    OnPrepareResponse = ctx =>
+    {
+        ctx.Context.Response.Headers.Add("Cache-Control", "public, max-age=600");
+    }
+});
 app.UseForwardedHeaders();
 app.UseRouting();
 
