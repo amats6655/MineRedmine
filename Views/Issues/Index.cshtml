@@ -1,9 +1,4 @@
-﻿
-    <script src="~/js/tags.js"></script>
-    
-    <style>
-        .hidden{display: none;}
-    </style>
+﻿    <script src="~/js/tags.js"></script>
     @using Redmine.Net.Api.Types
     @model List<Redmine.Net.Api.Types.Issue>
     @{
@@ -94,7 +89,7 @@
     
     <section id="grid-container" class="wrapper transitions-enabled fluid masonry js-masonry grid">
         <div class="container">
-            <div class="row ">
+            <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3">
                 @foreach (var issue in Model)
                 {
                     var color = issue.Priority.Id switch
@@ -106,37 +101,15 @@
                         _ => "#000000"
                         };
 
-                    <article class="col-12 col-md-6 col-lg-4 mb-4 @GetTags(issue)">
-                        <a href="@Url.Action("Edit", "Issues", new { id = issue.Id })" class="text-white">
-                            <div class="card text-white card-has-bg click-col">
-                                <div class="card-img-overlay d-flex flex-column" style="background-color: @color">
+                    <div class="col @GetTags(issue)">
+                    <a href="@Url.Action("Edit", "Issues", new { id = issue.Id })" class="text-white link-underline link-underline-opacity-0">
+                            <div class="card text-white">
+                                <div class="card-bg" style="background-color: @color">
                                     <div class="card-body">
                                         <small class="card-meta mb-2">@issue.Id.ToString()</small>
-                                        <h6 class="card-title mt-0">@issue.Subject</h6>
-                                        <small><i class="far fa-clock"></i>@issue.AssignedTo.Name</small>
+                                        <h6 class="card-title mt-0 text-uppercase">@issue.Subject</h6>
                                     </div>
-                                    <li class="list-group-item d-flex">
-                                        <div class="align-self-start">
-                                            <h6 class="my-0 text-white d-block">Местоположение:</h6>
-                                        </div>
-                                        <div class="align-self-end location">
-                                            <small>@GetLocation(issue)</small>
-                                        </div>
-                                    </li>
-                                    <div class="card-footer d-flex">
-                                        <div class="align-self-start author">
-                                            <h6 class="my-0 text-white d-block">Заявитель</h6>
-                                            <small>@issue.Author.Name</small>
-                                        </div>
-                                        <div class="align-self-end status">
-                                            <h6 class="my-0 text-white d-block">Статус</h6>
-                                            <small>@issue.Status.Name</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </article>
+                                    <div class="card-footer h-100">
                                         <dl class="row">
                                             <dt class="small col-6 text-truncate">Местоположение:</dt>
                                             <dd class="small col-6 text-truncate"><small>@GetLocation(issue)</small></dd>
@@ -160,7 +133,7 @@
 @functions{
     private string GetTags(Issue issue)
     {
-        var building = "Нема";
+        var building = "Пусто";
         foreach (var cf in issue.CustomFields)
         {
             if (!cf.Name.Equals("Объект Фонда")) continue;
