@@ -1,18 +1,29 @@
 ﻿@model Redmine.Net.Api.Types.Issue
 
-<h1 align="center">Заявка #@Model.Id</h1>
-<br/>
+<h2 class="text-center">@Model.Subject</h2>
+<hr/>
 <section class="wrapper">
     <div class="container">
         <div class="detail bg-light mb-3" style="box-shadow: 0 0 10px 2px @GetStatusColor();">
             <div class="card-body">
-                <p><strong>Создано: </strong>@Model.CreatedOn.ToString()</p>
-                <p><strong>Приоритет: </strong>@Model.Priority.Name</p>
-                <p><strong>Заявитель: </strong>@Model.Author.Name</p>
-                <p class="card-text text-wrap"><strong>Тема: </strong>@Model.Subject</p>
-                <p><strong>Телефон: <a href="tel:@GetPhoneNumber()">@GetPhoneNumber()</a></strong></p>
-                <p><strong>Местоположение: </strong>@GetLocation()</p>
-                <p><strong>Описание: </strong><br/>@Html.Raw(Model.Description)</p>
+                <dl class="row">
+                    <dt class="col-sm-3 col-5">ID:</dt>
+                    <dd class="col-sm-3 col-7">@Model.Id.ToString()</dd>
+                    
+                    <dt class="col-sm-3 col-5">Создано:</dt>
+                    <dd class="col-sm-3 col-7 text-truncate">@Model.CreatedOn.ToString()</dd>
+
+                    <dt class="col-sm-3 col-5">Приоритет:</dt>
+                    <dd class="col-sm-3 col-7">@Model.Priority.Name</dd>
+
+                    <dt class="col-sm-3 col-5">Телефон:</dt>
+                    <dd class="col-sm-3 col-7"><a href="tel:@GetPhoneNumber()">@GetPhoneNumber()</a></dd>
+
+                    <dt class="col-sm-3 col-5">Местоположение:</dt>
+                    <dd class="col-sm-3 col-7">@GetLocation()</dd>
+                </dl>
+
+                @Html.Raw(Model.Description)
             </div>
         </div>
         <div class="take-issue-btn" style="" align="center">
