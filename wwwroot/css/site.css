@@ -11,16 +11,16 @@ body {
 }
 
 .wrapper {
-    margin: 1vh;
+    margin: 0.1vh;
 }
 
 .detail {
     border: none;
     overflow: hidden;
-    border-radius: 20px;
+    border-radius: 5px;
     min-height: 400px;
-    box-shadow: 0 0 20px 5px #FF00003f;
-    padding: 10px 5px 5px;
+    box-shadow: 0 0 30px 2px #FF00003f;
+    padding: 2vh;
 }
 
 .comments {
@@ -93,20 +93,20 @@ body {
 
 .card:hover {
     cursor: pointer;
-    transition: all 800ms cubic-bezier(0.19, 1, 0.22, 1);
+    transition: all 800ms cubic-bezier(0.19, 1, 0.22, 10);
 }
 
 .card:hover .card-body {
-    margin-top: -2%;
+    margin-top: -1%;
     transition: all 800ms cubic-bezier(0.19, 1, 0.22, 1);
 }
 
-.card:hover .card-footer {
-    margin-bottom: -2%;
+.card:hover{
+    box-shadow: 0 10px 10px 2px #333333aa;
     transition: all 800ms cubic-bezier(0.19, 1, 0.22, 1);
 }
 
-.card .card-img-overlay {
+.card .card-bg {
     transition: all 800ms cubic-bezier(0.19, 1, 0.22, 1);
     background: #234f6d;
     background: linear-gradient(0deg, rgba(35, 79, 109, 0.3785889356) 0%, #455f71 100%);
@@ -282,23 +282,16 @@ body {
 
 @media (orientation: portrait) {
     .card-body{
-        padding: 0;
+        padding: 0 0 0 1vh;
     }
     .card-footer{
-        padding: 0;
-    }
-    .card-title{
-        padding:0;
+        padding: 0 0 0 1vh;
     }
     .detail {
-        min-height: 50vh;
-    }
-    .wrapper {
-        display: flex;
-        flex-wrap: wrap;
-    }
+        min-height: 40vh;
+    }  
     .container{
-        padding: 0;
+        padding: 0.5vh;
     }
     .speech-bubble{
         margin: 10px 10px 40px;
