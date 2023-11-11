@@ -8,7 +8,7 @@
 
     var grid = document.querySelector('.grid');
     var iso = new Isotope(grid, {
-        itemSelector: 'article'
+        itemSelector: '.col'
     });
 
 

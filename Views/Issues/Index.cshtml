@@ -102,7 +102,7 @@
                         };
 
                     <div class="col @GetTags(issue)">
-                    <a href="@Url.Action("Edit", "Issues", new { id = issue.Id })" class="text-white link-underline link-underline-opacity-0">
+                        <a href="@Url.Action("Edit", "Issues", new { id = issue.Id })" class="text-white link-underline link-underline-opacity-0">
                             <div class="card text-white">
                                 <div class="card-bg" style="background-color: @color">
                                     <div class="card-body">
@@ -122,8 +122,8 @@
                                         </dl>
                                     </div>
                                 </div>
-                             </div>
-                         </a>
+                            </div>
+                        </a>
                     </div>
                 }
             </div>
