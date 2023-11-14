@@ -4,92 +4,95 @@ using Redmine.Net.Api;
 using Redmine.Net.Api.Async;
 using Redmine.Net.Api.Types;
 using Redmine.Net.Api.Exceptions;
-using Serilog;
 
-namespace RedmineApp.Services
+namespace RedmineApp.Services;
+public class RedmineService
 {
-    public class RedmineService
+    private readonly string _redmineServerUrl;
+    private readonly RedmineManager? _redmineManager;
+    private readonly Serilog.ILogger _logger;
+    private readonly IMemoryCache _cache;
+
+    // Добавлен конструктор по умолчанию
+    public RedmineService(IConfiguration configuration, IMemoryCache cache)
     {
+        _redmineServerUrl = configuration["RedmineSettings:ServerUrl"]!;
+        _cache = cache;
+        _redmineManager = null;
+    }
+
+    public RedmineService(string apiKey, Serilog.ILogger logger, IMemoryCache cache, IConfiguration configuration) : this(configuration, cache)
+    {
+        _cache = cache;
+        _logger = logger;
+        _redmineManager = InitializeRedmineManager(apiKey);
+    }
+
+    public RedmineService(string username, string password, Serilog.ILogger logger, IMemoryCache cache, IConfiguration configuration) : this(configuration, cache)
+    {
+        _cache = cache;
+        _logger = logger;
+        _redmineManager = InitializeRedmineManager(username, password);
+    }
+    
+    private RedmineManager? InitializeRedmineManager(string apiKey)
+    {
+        return IsValidApiKey(apiKey) ? new RedmineManager(_redmineServerUrl, apiKey) : null;
+    }
+
+    private RedmineManager? InitializeRedmineManager(string username, string password)
+    {
+        return IsValidUserCredentials(username, password) ? new RedmineManager(_redmineServerUrl, username, password) : null;
+    }
+
+    public async Task<List<Issue>?> GetIssuesAsync(string? clientIp)
+    {
+        var currentUser = await GetCurrentUserAsync();
+        var log = _logger.ForContext("CurrentUser",
+                new { Id = currentUser.Id, FirstName = currentUser.FirstName, LastName = currentUser.LastName },
+                destructureObjects: true)
+            .ForContext("Issue", new { Id = 0 }, destructureObjects: true)
+            .ForContext("ClientIp", clientIp, destructureObjects: true);
         
-        private readonly RedmineManager? _redmineManager;
-        private readonly Serilog.ILogger _logger;
-        private readonly IMemoryCache _cache;
-
-        // Добавлен конструктор по умолчанию
-        public RedmineService(IMemoryCache cache)
+        return await _cache.GetOrCreateAsync("UserIssues", async entry =>
         {
-            _cache = cache;
-            _redmineManager = null;
-        }
-
-        public RedmineService(string apiKey, Serilog.ILogger logger, IMemoryCache cache) : this(cache)
-        {
-            _cache = cache;
-            _logger = logger;
-            if (IsValidApiKey(apiKey))
+            entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10); // Кеширование на 10 минут
+            var parameters = new NameValueCollection
             {
-                _redmineManager = new RedmineManager("https://sd.talantiuspeh.ru", apiKey);
-            }
-        }
+                {RedmineKeys.ASSIGNED_TO_ID, "me"},
+                {RedmineKeys.STATUS_ID, "7|14|2"}
+            };
+            var result = await _redmineManager.GetObjectsAsync<Issue>(parameters);
+            log.Information("Получен список заявок");
+            return result.OrderByDescending(issue => issue.UpdatedOn).ToList();
+        });
+    }
 
-        public RedmineService(string username, string password, Serilog.ILogger logger, IMemoryCache cache) : this(cache)
+    public async Task<Issue> GetIssueAsync(int id, string? clientIp)
+    {
+        var parameters = new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.JOURNALS } };
+        var currentUser = await GetCurrentUserAsync();
+        var log = _logger.ForContext("CurrentUser", new {Id = currentUser.Id, FirstName = currentUser.FirstName, LastName = currentUser.LastName}, destructureObjects: true)
+            .ForContext("Issue", new {Id = id}, destructureObjects: true)
+            .ForContext("ClientIp", clientIp, destructureObjects: true);
+        try
         {
-            _cache = cache;
-            _logger = logger;
-            if (IsValidUserCredentials(username, password))
-            {
-                _redmineManager = new RedmineManager("https://sd.talantiuspeh.ru", username, password);
-            }
+            log.Information($"Открыта задача");
+            return await _redmineManager.GetObjectAsync<Issue>(id.ToString(), parameters);
         }
-
-        public async Task<List<Issue>?> GetIssuesAsync(string? clientIp)
+        catch (Exception)
         {
-            var currentUser = await GetCurrentUserAsync();
-            var log = _logger.ForContext("CurrentUser",
-                    new { Id = currentUser.Id, FirstName = currentUser.FirstName, LastName = currentUser.LastName },
-                    destructureObjects: true)
-                .ForContext("Issue", new { Id = 0 }, destructureObjects: true)
-                .ForContext("ClientIp", clientIp, destructureObjects: true);
-            
-            return await _cache.GetOrCreateAsync("UserIssues", async entry =>
-            {
-                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10); // Кеширование на 10 минут
-                var parameters = new NameValueCollection
-                {
-                    {RedmineKeys.ASSIGNED_TO_ID, "me"},
-                    {RedmineKeys.STATUS_ID, "7|14|2"}
-                };
-                var result = await _redmineManager.GetObjectsAsync<Issue>(parameters);
-                log.Information("Получен список заявок");
-                return result.OrderByDescending(issue => issue.UpdatedOn).ToList();
-            });
+            log.Warning("Возникла ошибка при поиске заявки");
+            throw new RedmineException("Issue Not Found");
         }
 
-        public async Task<Issue> GetIssueAsync(int id, string? clientIp)
-        {
-            var parameters = new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.JOURNALS } };
-            var currentUser = await GetCurrentUserAsync();
-            var log = _logger.ForContext("CurrentUser", new {Id = currentUser.Id, FirstName = currentUser.FirstName, LastName = currentUser.LastName}, destructureObjects: true)
-                .ForContext("Issue", new {Id = id}, destructureObjects: true)
-                .ForContext("ClientIp", clientIp, destructureObjects: true);
-            try
-            {
-                log.Information($"Открыта задача");
-                return await _redmineManager.GetObjectAsync<Issue>(id.ToString(), parameters);
-            }
-            catch (Exception)
-            {
-                log.Warning("Возникла ошибка при поиске заявки");
-                throw new RedmineException("Issue Not Found");
-            }
+    }
 
-        }
-
-        public async Task<User> GetCurrentUserAsync()
-        {
-            var currentUser = await _redmineManager.GetCurrentUserAsync();
-            return currentUser;
-        }
+    private async Task<User> GetCurrentUserAsync()
+    {
+        var currentUser = await _redmineManager.GetCurrentUserAsync();
+        return currentUser;
+    }
 
     public async Task TakeIssueAsync(int issueId, string? clientIp)
     {
@@ -124,42 +127,39 @@ namespace RedmineApp.Services
             throw new RedmineException("You are not authorized to access this page.");
         }
     }
-
-
-        
-        public static bool IsValidApiKey(string apiKey)
+    
+    public bool IsValidApiKey(string apiKey)
+    {
+        try
         {
-            try
-            {
-                var redmineManager = new RedmineManager("https://sd.talantiuspeh.ru", apiKey);
-                var currentUser = redmineManager.GetCurrentUser(); // Если ключ API недействителен, этот метод вызовет исключение
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            var redmineManager = new RedmineManager(_redmineServerUrl, apiKey);
+            var currentUser = redmineManager.GetCurrentUser(); // Если ключ API недействителен, этот метод вызовет исключение
+            return true;
         }
-
-        public static bool IsValidUserCredentials(string username, string password)
+        catch
         {
-            try
-            {
-                
-                var redmineManager = new RedmineManager("https://sd.talantiuspeh.ru", username, password);
-                var currentUser = redmineManager.GetCurrentUser();
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            return false;
         }
+    }
 
-        // Добавлен метод проверки действительности сессии
-        public bool IsSessionValid()
+    public bool IsValidUserCredentials(string username, string password)
+    {
+        try
         {
-            return _redmineManager != null;
+            
+            var redmineManager = new RedmineManager(_redmineServerUrl, username, password);
+            var currentUser = redmineManager.GetCurrentUser();
+            return true;
         }
+        catch
+        {
+            return false;
+        }
+    }
+
+    // Добавлен метод проверки действительности сессии
+    public bool IsSessionValid()
+    {
+        return _redmineManager != null;
     }
 }
