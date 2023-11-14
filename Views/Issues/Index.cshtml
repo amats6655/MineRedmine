@@ -1,11 +1,7 @@
 ﻿    <script src="~/js/tags.js"></script>
     @using Redmine.Net.Api.Types
+    @using System.Text
     @model List<Redmine.Net.Api.Types.Issue>
-    @{
-        var Buildings = ViewData["Buildings"] as Dictionary<int, string>;
-        var UniqueBuildings = ViewData["UniqueBuildings"] as List<IssueCustomField>;
-        var IssueBuildings = ViewData["IssueBuildings"] as List<IssueCustomField>;
-    }
 
     <h1 align="center">Мои задачи</h1>
     
@@ -68,27 +64,29 @@
                             </div>
                         </div>
                     </div>
-                    <div class="dropdown dropend">
-                        <button class="button dropdown-toggle filter-btn" type="button" id="buildingDropdown" data-bs-toggle="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Объект</button>
-                        <div class="dropdown-menu" aria-labelledby="buildingDropdown">
-                            @foreach (var building in UniqueBuildings)
+                    
+                        @{
+                            var customFieldSettings = ViewData["CustomFieldsSettings"] as Dictionary<string, string>;
+                            foreach (var fieldSetting in customFieldSettings)
                             {
-                                int buildingId;
-                                if (int.TryParse(building.Values[0].Info, out buildingId) && Buildings.ContainsKey(buildingId))
-                                {
-                                    <div class="dropdown-item">
-                                        <label>
-                                            <input type="checkbox" class="filter-checkbox d-none" data-group="building" data-filter=".@building.Values[0].Info">@Buildings[buildingId] <span class="badge bg-info">@IssueBuildings.Count(i => i.Values[0].Info.Equals(building.Values[0].Info))</span>
-                                        </label>
+                                var customFieldData = ViewData[fieldSetting.Key] as List<IssueCustomField>;
+                                <div class="dropdown dropend">
+                                    <button class="button dropdown-toggle filter-btn" type="button" data-bs-toggle="dropdown">
+                                        @fieldSetting.Value
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        @foreach (var cf in customFieldData)
+                                        {
+                                            <div class="dropdown-item">
+                                                <label>
+                                                    <input type="checkbox" class="filter-checkbox d-none" data-group="@fieldSetting.Key" data-filter=".@cf.Values[0].Info">@cf.Values[0].Info
+                                                </label>
+                                            </div>
+                                        }
                                     </div>
-                                }
-                                else
-                                {
-                                    <script>console.error("Building ID not found in the dictionary: " + @building.Values[0].Info);</script>
-                                }
+                                </div>
                             }
-                        </div>
-                    </div>
+                        }
                 </div>
             </div>
         </div>
@@ -141,13 +139,19 @@
 @functions{
     private string GetTags(Issue issue)
     {
-        var building = "Пусто";
-        foreach (var cf in issue.CustomFields)
+        var result = new StringBuilder();
+        var customFieldSettings = ViewData["CustomFieldsSettings"] as Dictionary<string, string>;
+        foreach (var fieldSetting in customFieldSettings)
         {
-            if (!cf.Name.Equals("Объект Фонда")) continue;
-            building = cf.Values[0].Info;
-            break;
+            var customFieldData = ViewData[fieldSetting.Key] as List<IssueCustomField>;
+            foreach (var caf in issue.CustomFields)
+            {
+                if(!caf.Name.Equals(fieldSetting.Value)) continue;
+                result.Append($" {caf.Values[0].Info}");
+                break;
+            }
         }
+
         var status = issue.Status.Id switch
         {
             2 => "in-work",
@@ -161,9 +165,9 @@
             4 => "critical",
             _ => "low"
             };
-        var result = $"{status} {priority} {building}";
+        result.Append($" {status} {priority}");
 
-        return result;
+        return result.ToString();
     }
     private string GetLocation(Issue issue)
     {

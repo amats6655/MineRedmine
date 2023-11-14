@@ -14,7 +14,8 @@ public class IssuesController : Controller
     private readonly INotyfService _notyf;
     private readonly IMemoryCache _cache;
     private readonly Dictionary<string, string> _customFieldSettings;
-    private readonly Dictionary<string, Dictionary<int, string>> _customFields;
+    private readonly Dictionary<string, List<IssueCustomField>> _customFieldData;
+    private readonly Dictionary<string, Dictionary<int, string>> _customFieldNames;
     private readonly Dictionary<int, string> _buildings;
 
     public IssuesController(RedmineService redmineService, INotyfService notyf, IMemoryCache cache, IConfiguration configuration)
@@ -23,6 +24,10 @@ public class IssuesController : Controller
         _redmineService = redmineService;
         _notyf = notyf;
         _cache = cache;
+        _customFieldNames = new Dictionary<string, Dictionary<int, string>>();
+        _customFieldSettings = _configuration.GetSection("CustomFieldsSettings").Get<Dictionary<string, string>>() 
+                               ?? new Dictionary<string, string>();
+        _customFieldData = new Dictionary<string, List<IssueCustomField>>();
         _buildings = _configuration.GetSection("CustomFields:Buildings").Get<Dictionary<int, string>>() 
                      ?? new Dictionary<int, string>();
     }
@@ -45,16 +50,34 @@ public class IssuesController : Controller
             };
             _cache.Set("UserIssues", issues, cacheEntryOptions);
         }
-        var issueBuildings = (
-            from issue in issues 
-            from cf in issue.CustomFields.ToList() 
-            where cf.Name.Equals("Объект Фонда") 
-            select cf).ToList();
-        var uniqueBuildings = issueBuildings.Distinct().ToList();
 
-        ViewData["IssueBuildings"] = issueBuildings;
-        ViewData["UniqueBuildings"] = uniqueBuildings;
-        ViewData["Buildings"] = _buildings;
+        foreach (var fieldSetting in _customFieldSettings)
+        {
+            var issueCustomField = (
+                from issue in issues
+                from cf in issue.CustomFields
+                where cf != null && cf.Name.Equals(fieldSetting.Value)
+                select cf).Distinct().ToList();
+            _customFieldData[fieldSetting.Key] = issueCustomField ?? new List<IssueCustomField>();
+        }
+        foreach (var field in _customFieldData.Keys)
+        {
+            ViewData[field] = _customFieldData[field];
+        }
+
+        ViewData["CustomFieldsSettings"] = _customFieldSettings;
+        ViewData["CustomFieldNames"] = _customFieldNames;
+        // var issueBuildings = (
+        //     from issue in issues 
+        //     from cf in issue.CustomFields.ToList() 
+        //     where cf.Name.Equals(_customFieldSettings.GetValueOrDefault("Buildings")) 
+        //     select cf).ToList();
+        // _customFieldData.TryAdd("Buildings", issueBuildings);
+        
+        // var uniqueBuildings = issueBuildings.Distinct().ToList();
+        // ViewData["IssueBuildings"] = issueBuildings;
+        // ViewData["UniqueBuildings"] = uniqueBuildings;
+        // ViewData["Buildings"] = _buildings;
         return View(issues);
     }
 
