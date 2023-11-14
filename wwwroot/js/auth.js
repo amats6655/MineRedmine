@@ -25,7 +25,7 @@ $(".authInput").keyup(function(event) {
 
 $("#submitButton").click(function() {
     if($('#useApiKey').is(':checked')) {
-        $.post("/Issues/ValidateApiKey", { apiKey: $("#apiKeyInput").val() }, function(data) {
+        $.post("/Login/ValidateApiKey", { apiKey: $("#apiKeyInput").val() }, function(data) {
             if (data.isValid) {
                 // Если ключ API действителен, обновляем страницу
                 location.reload();
@@ -35,7 +35,7 @@ $("#submitButton").click(function() {
             }
         });
     } else {
-        $.post("/Issues/IsValidUserCredentials",
+        $.post("/Login/IsValidUserCredentials",
             {
                 username: $("#usernameInput").val(),
                 password: $("#passwordInput").val()
