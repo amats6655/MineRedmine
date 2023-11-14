@@ -17,6 +17,7 @@ Log.Logger = new LoggerConfiguration()
         retainedFileCountLimit: 3 * 30)
     .CreateLogger();
 builder.Host.UseSerilog();
+var configuration = builder.Configuration;
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddDistributedMemoryCache(); // Adds a default in-memory implementation of IDistributedCache
@@ -26,6 +27,7 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
+
 
 builder.Services.AddScoped<RedmineService>(sp =>
 {
@@ -39,15 +41,15 @@ builder.Services.AddScoped<RedmineService>(sp =>
 
     if (!string.IsNullOrEmpty(apiKey))
     {
-        return new RedmineService(apiKey, logger, cache);
+        return new RedmineService(apiKey, logger, cache, configuration);
     }
     else if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
     {
-        return new RedmineService(username, password, logger, cache);
+        return new RedmineService(username, password, logger, cache, configuration);
     }
 
     // Возвращаем простую заглушку, если сессия недействительна
-    return new RedmineService(cache);
+    return new RedmineService(configuration, cache);
 });
 
 // Add services to the container.
