@@ -73,11 +73,19 @@
                         <div class="dropdown-menu" aria-labelledby="buildingDropdown">
                             @foreach (var building in UniqueBuildings)
                             {
-                                <div class="dropdown-item">
-                                    <label>
-                                        <input type="checkbox" class="filter-checkbox d-none" data-group="building" data-filter=".@building.Values[0].Info">@Buildings[int.Parse(building.Values[0].Info)] <span class="badge bg-info">@IssueBuildings.Count(i => i.Values[0].Info.Equals(building.Values[0].Info))</span>
-                                    </label>
-                                </div>
+                                int buildingId;
+                                if (int.TryParse(building.Values[0].Info, out buildingId) && Buildings.ContainsKey(buildingId))
+                                {
+                                    <div class="dropdown-item">
+                                        <label>
+                                            <input type="checkbox" class="filter-checkbox d-none" data-group="building" data-filter=".@building.Values[0].Info">@Buildings[buildingId] <span class="badge bg-info">@IssueBuildings.Count(i => i.Values[0].Info.Equals(building.Values[0].Info))</span>
+                                        </label>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <script>console.error("Building ID not found in the dictionary: " + @building.Values[0].Info);</script>
+                                }
                             }
                         </div>
                     </div>
