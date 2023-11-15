@@ -4,6 +4,7 @@ using Redmine.Net.Api;
 using Redmine.Net.Api.Async;
 using Redmine.Net.Api.Types;
 using Redmine.Net.Api.Exceptions;
+using Serilog;
 
 namespace RedmineApp.Services;
 public class RedmineService
@@ -125,6 +126,31 @@ public class RedmineService
                              .ForContext("ClientIp", clientIp, destructureObjects: true);
             log.Error($"При обновлении задача возникла ошибка");
             throw new RedmineException("You are not authorized to access this page.");
+        }
+    }
+
+    public async Task AddCommentAsync(int issueId, string clientIp, string comment, bool privateNotes, byte[] fileData = null, string? fileName = null, string fileContentType = null)
+    {
+        var issue = await _redmineManager.GetObjectAsync<Issue>(issueId.ToString(), null);
+        var currentUser = await GetCurrentUserAsync();
+        issue.Notes = comment;
+        issue.PrivateNotes = privateNotes;
+        if (fileData != null)
+        {
+            var attachment = await _redmineManager.UploadFileAsync(fileData);
+            attachment.FileName = fileName;
+            attachment.Description = comment;
+            attachment.ContentType = fileContentType;
+            IList<Upload> attachments = new List<Upload>{attachment};
+            issue.Uploads = attachments;
+        }
+        try
+        {
+            await _redmineManager.UpdateObjectAsync(issueId.ToString(), issue);
+        }
+        catch (Exception ex)
+        {
+            
         }
     }
     

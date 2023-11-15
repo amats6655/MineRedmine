@@ -131,4 +131,40 @@ public class IssuesController : Controller
             return RedirectToAction("Index");
         }
     }
+
+    [HttpPost]
+    public async Task<IActionResult> AddComment(int id, string comment, bool privateNotes, IFormFile? file)
+    {
+        
+        if (!_redmineService.IsSessionValid())
+        {
+            return RedirectToAction("Index", "Login");
+        }
+
+        try
+        {
+            var clientIp = HttpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault();
+            byte[] fileData = null;
+            string fileName = null;
+            string fileContentType = null;
+            if (file != null)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    await file.CopyToAsync(ms);
+                    fileData = ms.ToArray();
+                    fileName = file.FileName;
+                    fileContentType = file.ContentType;
+                }
+                await _redmineService.AddCommentAsync(id, clientIp, comment, privateNotes, fileData, fileName, fileContentType);
+                return RedirectToAction("Edit", new {id = id});
+            }
+            await _redmineService.AddCommentAsync(id, clientIp, comment, privateNotes);
+            return RedirectToAction("Edit", new {id = id});
+        }
+        catch
+        {
+            return RedirectToAction("Index");
+        }
+    }
 }
