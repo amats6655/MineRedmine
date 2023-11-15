@@ -24,7 +24,9 @@ public class IssuesController : Controller
         _redmineService = redmineService;
         _notyf = notyf;
         _cache = cache;
-        _customFieldNames = new Dictionary<string, Dictionary<int, string>>();
+        _customFieldNames =
+            _configuration.GetSection("CustomFieldNames").Get<Dictionary<string, Dictionary<int, string>>>() ??
+            new Dictionary<string, Dictionary<int, string>>();
         _customFieldSettings = _configuration.GetSection("CustomFieldsSettings").Get<Dictionary<string, string>>() 
                                ?? new Dictionary<string, string>();
         _customFieldData = new Dictionary<string, List<IssueCustomField>>();
@@ -64,20 +66,10 @@ public class IssuesController : Controller
         {
             ViewData[field] = _customFieldData[field];
         }
-
+        
         ViewData["CustomFieldsSettings"] = _customFieldSettings;
         ViewData["CustomFieldNames"] = _customFieldNames;
-        // var issueBuildings = (
-        //     from issue in issues 
-        //     from cf in issue.CustomFields.ToList() 
-        //     where cf.Name.Equals(_customFieldSettings.GetValueOrDefault("Buildings")) 
-        //     select cf).ToList();
-        // _customFieldData.TryAdd("Buildings", issueBuildings);
         
-        // var uniqueBuildings = issueBuildings.Distinct().ToList();
-        // ViewData["IssueBuildings"] = issueBuildings;
-        // ViewData["UniqueBuildings"] = uniqueBuildings;
-        // ViewData["Buildings"] = _buildings;
         return View(issues);
     }
 

@@ -67,24 +67,46 @@
                     
                         @{
                             var customFieldSettings = ViewData["CustomFieldsSettings"] as Dictionary<string, string>;
+                            var customFieldNames = ViewData["CustomFieldNames"] as Dictionary<string, Dictionary<int, string>>;
                             foreach (var fieldSetting in customFieldSettings)
                             {
                                 var customFieldData = ViewData[fieldSetting.Key] as List<IssueCustomField>;
-                                <div class="dropdown dropend">
+                                if (customFieldNames != null && customFieldNames.ContainsKey(fieldSetting.Key))
+                                {
+                                    <div class="dropdown dropend">
                                     <button class="button dropdown-toggle filter-btn" type="button" data-bs-toggle="dropdown">
                                         @fieldSetting.Value
                                     </button>
                                     <div class="dropdown-menu">
                                         @foreach (var cf in customFieldData)
                                         {
-                                            <div class="dropdown-item">
-                                                <label>
-                                                    <input type="checkbox" class="filter-checkbox d-none" data-group="@fieldSetting.Key" data-filter=".@cf.Values[0].Info">@cf.Values[0].Info
-                                                </label>
-                                            </div>
+                                            if (cf.Values.Count > 0 && int.TryParse(cf.Values[0].Info, out int cfID))
+                                            {
+                                                if (customFieldNames[fieldSetting.Key].ContainsKey(cfID))
+                                                {
+                                                    <div class="dropdown-item">
+                                                        <label>
+                                                            <input type="checkbox" class="filter-checkbox d-none" data-group="@fieldSetting.Key" data-filter=".@cf.Values[0].Info">@customFieldNames[fieldSetting.Key][int.Parse(cf.Values[0].Info)]
+                                                        </label>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <script>console.error("object ID not found in the dictionary: " + @cf.Values[0].Info);</script>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <script>console.error("Custom field value is not integer: " + @cf.Values[0].Info);</script>
+                                            }
                                         }
                                     </div>
                                 </div>
+                                }
+                                else
+                                {
+                                    <script>console.error("custom field name settings not found for key: " + @fieldSetting.Key);</script>
+                                }
                             }
                         }
                 </div>
