@@ -133,24 +133,35 @@ public class RedmineService
     {
         var issue = await _redmineManager.GetObjectAsync<Issue>(issueId.ToString(), null);
         var currentUser = await GetCurrentUserAsync();
-        issue.Notes = comment;
-        issue.PrivateNotes = privateNotes;
-        if (fileData != null)
+        if (!string.IsNullOrEmpty(comment))
         {
-            var attachment = await _redmineManager.UploadFileAsync(fileData);
-            attachment.FileName = fileName;
-            attachment.Description = comment;
-            attachment.ContentType = fileContentType;
-            IList<Upload> attachments = new List<Upload>{attachment};
-            issue.Uploads = attachments;
-        }
-        try
-        {
-            await _redmineManager.UpdateObjectAsync(issueId.ToString(), issue);
-        }
-        catch (Exception ex)
-        {
-            
+            issue.Notes = comment;
+            issue.PrivateNotes = privateNotes;
+            if (fileData != null && fileName != null && fileContentType != null)
+            {
+                var attachment = await _redmineManager.UploadFileAsync(fileData);
+                attachment.FileName = fileName;
+                attachment.Description = comment;
+                attachment.ContentType = fileContentType;
+                IList<Upload> attachments = new List<Upload>{attachment};
+                issue.Uploads = attachments;
+            }
+            try
+            {
+                await _redmineManager.UpdateObjectAsync(issueId.ToString(), issue);
+                var log = _logger.ForContext("CurrentUser", new {Id = currentUser.Id, FirstName = currentUser.FirstName, LastName = currentUser.LastName}, destructureObjects: true)
+                    .ForContext("Issue", new {Id = issue.Id, Status = issue.Status.Name}, destructureObjects: true)
+                    .ForContext("ClientIp", clientIp, destructureObjects: true);
+                log.Information($"Добавлен комментарий");
+            }
+            catch (Exception ex)
+            {
+                var log = _logger.ForContext("CurrentUser", new {Id = currentUser.Id, FirstName = currentUser.FirstName, LastName = currentUser.LastName}, destructureObjects: true)
+                    .ForContext("Issue", new {Id = issue.Id, Status = issue.Status}, destructureObjects: true)
+                    .ForContext("Exception", ex, destructureObjects: true)
+                    .ForContext("ClientIp", clientIp, destructureObjects: true);
+                log.Error(ex.ToString());
+            }
         }
     }
     
