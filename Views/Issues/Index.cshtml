@@ -43,22 +43,22 @@
                         <button class="button dropdown-toggle filter-btn" type="button" id="priorityDropdownButton" data-bs-toggle="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Приоритет</button>
                         <div class="dropdown-menu" aria-labelledby="priorityDropdown">
                             <div class="dropdown-item">
-                                <label>
+                                <label class="w-100">
                                     <input type="checkbox" class="filter-checkbox d-none" data-group="priority" data-filter=".low"/>Низкий <span class="badge bg-info">@Model.Count(i => i.Priority.Id == 1).ToString()</span>
                                 </label>
                             </div>
                             <div class="dropdown-item">
-                                <label>
+                                <label class="w-100">
                                     <input type="checkbox" class="filter-checkbox d-none" data-group="priority" data-filter=".average"/>Средний <span class="badge bg-info">@Model.Count(i => i.Priority.Id == 2).ToString()</span>
                                 </label>
                             </div>
                             <div class="dropdown-item">
-                                <label>
+                                <label class="w-100">
                                     <input type="checkbox" class="filter-checkbox d-none" data-group="priority" data-filter=".high">Высокий <span class="badge bg-info">@Model.Count(i => i.Priority.Id == 3).ToString()</span>
                                 </label>
                             </div>
                             <div class="dropdown-item">
-                                <label>
+                                <label class="w-100">
                                     <input type="checkbox" class="filter-checkbox d-none" data-group="priority" data-filter=".critical">Критический <span class="badge bg-info">@Model.Count(i => i.Priority.Id == 4).ToString()</span>
                                 </label>
                             </div>
@@ -85,7 +85,7 @@
                                                 if (customFieldNames[fieldSetting.Key].ContainsKey(cfID))
                                                 {
                                                     <div class="dropdown-item">
-                                                        <label>
+                                                    <label class="w-100">
                                                             <input type="checkbox" class="filter-checkbox d-none" data-group="@fieldSetting.Key" data-filter=".@cf.Values[0].Info">@customFieldNames[fieldSetting.Key][int.Parse(cf.Values[0].Info)]
                                                         </label>
                                                     </div>
