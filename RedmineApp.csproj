@@ -78,6 +78,7 @@
 
   <ItemGroup>
     <Folder Include="Views\Issues\filters\" />
+    <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -240,6 +240,21 @@ body {
     cursor: pointer;
 }
 
+.comment-popup-btn {
+    position: fixed;
+    bottom: 60px;
+    left: 90%;
+    transform: translateX(-50%);
+    padding: 10px 10px;
+    background-color: #527aee;
+    border: 1px solid #ffffff;
+    box-shadow: 0 0 5px 3px rgba(13, 202, 240, 0.61);
+    color: #fff;
+    border-radius: 20px;
+    z-index: 1001;
+    cursor: pointer;
+}
+
 .filter-popup {
     display: none;
     position: fixed;
@@ -299,7 +314,7 @@ body {
     .custom-button{
         width: 90%;
         position: fixed;
-        bottom: 20px;
+        bottom: 10px;
         left: 50%;
         transform: translate(-50%);
         z-index: 9998;

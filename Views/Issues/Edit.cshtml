@@ -1,8 +1,10 @@
 ﻿@model Redmine.Net.Api.Types.Issue
 
 <!-- Кнопка для открытия модального окна -->
-<button type="button" class="filter-popup-btn comment-btn btn btn-primary" data-bs-toggle="modal" data-bs-target="#commentPopup" data-issue-id="@Model.Id">
-    Добавить комментарий
+<button type="button" class="comment-popup-btn comment-btn btn btn-primary" data-bs-toggle="modal" data-bs-target="#commentPopup" data-issue-id="@Model.Id" data-url="@Url.Action("AddComment", "Issues")">
+    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-chat-right-fill" viewBox="0 0 16 16">
+      <path d="M14 0a2 2 0 0 1 2 2v12.793a.5.5 0 0 1-.854.353l-2.853-2.853a1 1 0 0 0-.707-.293H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12z"/>
+    </svg>
 </button> 
 
 <!-- Модальное окно -->
@@ -32,6 +34,9 @@
                 </form>
             </div>
             <div class="modal-footer">
+                <div id="loadingSpinner" class="spinner-border text-primary" role="status" style="display: none;">
+                    <span class="sr-only">Загрузка...</span>
+                </div>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
                 <button type="submit" class="btn btn-primary" form="commentForm">Отправить</button>
             </div>

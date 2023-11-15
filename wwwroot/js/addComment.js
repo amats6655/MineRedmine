@@ -1,22 +1,29 @@
- document.getElementById('commentForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-
-    var formData = new FormData(this);
-    formData.append('id', document.querySelector('.comment-btn').getAttribute('data-issue-id'));
-    formData.append('comment', document.getElementById('commentText').value);
-    formData.append('privateNotes', document.getElementById('privateComment').checked);
-    formData.append('file', document.getElementById('commentFile').files[0]);
-    
-
-    
-    fetch('@Url.Action("AddComment", "Issues")', {
-    method: 'POST',
-    body: formData
-}).then(response => {
-    if (response.ok) {
-    // Обработка успешной отправки
-} else {
-    // Обработка ошибки
-}
-});
+$(document).ready(function(){
+    $('#commentForm').on('submit', function (event){
+        event.preventDefault();
+        $('#loadingSpinner').show();
+        
+        var formData = new FormData(this);
+        var issueId = $('.comment-btn').data('issue-id');
+        var url = $('.comment-btn').data('url');
+        
+        formData.append('id', issueId);
+        formData.append('comment', $('#commentText').val());
+        formData.append('privateNotes', $('#privateComment').is(':checked'));
+        formData.append('file', $('#commentFile')[0].files[0]);
+        
+        $.ajax({
+            url:url,
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                location.reload();
+            },
+            error: function () {
+                console.error(this.error)
+            }
+        });
+    });
 });
