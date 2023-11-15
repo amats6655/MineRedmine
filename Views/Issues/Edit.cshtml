@@ -16,21 +16,22 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="commentForm">
+                <form id="commentForm" novalidate>
                     <div class="mb-3">
                         <label for="commentText" class="form-label">Комментарий</label>
-                        <textarea class="form-control" id="commentText" rows="3"></textarea>
+                        <textarea class="form-control" id="commentText" rows="3" required></textarea>
+                        <div class="invalid-feedback">Пожалуйста, введите комментарий.</div>
                     </div>
                     <div class="mb-3">
-                        <label for="commentFile" class="form-label">Добавить вложение</label>
+                        <label for="commentFile" class="form-label">Добавить вложение (макс. 5 МБ)</label>
                         <input class="form-control" type="file" id="commentFile">
+                        <div class="invalid-feedback">Размер файла превышает 5 МБ.</div>
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="privateComment">
-                        <label class="form-check-label" for="privateComment">
-                            Приватный комментарий
-                        </label>
+                        <label class="form-check-label" for="privateComment">Приватный комментарий</label>
                     </div>
+                    <button type="submit" class="btn btn-primary">Отправить</button>
                 </form>
             </div>
             <div class="modal-footer">
