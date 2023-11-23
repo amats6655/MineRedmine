@@ -67,6 +67,12 @@
 
                     <dt class="col-sm-3 col-5">Местоположение:</dt>
                     <dd class="col-sm-3 col-7">@GetLocation()</dd>
+                    
+                    <dt class="col-sm-3 col-5">Заявитель:</dt>
+                    <dd class="col-sm-3 col-7">@Model.Author.Name</dd>
+                    
+                    <dt class="col-sm-3 col-5">Объект фонда:</dt>
+                    <dd class="col-sm-3 col-7"></dd>
                 </dl>
 
                 @Html.Raw(Model.Description)

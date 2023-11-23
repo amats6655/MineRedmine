@@ -39,6 +39,10 @@
         var filterValue = combineFilters();
         iso.arrange({ filter: filterValue });
     }
+    function updateFilterCount() {
+        var count = Object.keys(filters).reduce((acc, key) => acc + filters[key].length, 0);
+        document.querySelector('.filter-count-badge').textContent = count;
+    }
 
     var checkboxes = document.querySelectorAll('.dropdown-menu .filter-checkbox');
     checkboxes.forEach(function(checkbox) {
@@ -72,8 +76,10 @@
             // Сохраняем данные фильтрации в sessionStorage после применения фильтров
             var filtersString = JSON.stringify(filters);
             sessionStorage.setItem('filtersData', filtersString);
+            updateFilterCount();
         });
     });
+    updateFilterCount();
     applyFilters()
 
     var allButton = document.getElementById('all');
@@ -86,6 +92,7 @@
         // Сохраняем данные фильтрации в sessionStorage после применения фильтров
         var filtersString = JSON.stringify(filters);
         sessionStorage.setItem('filtersData', filtersString);
+        updateFilterCount();
         applyFilters();
     });
     

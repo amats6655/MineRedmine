@@ -240,6 +240,21 @@ body {
     cursor: pointer;
 }
 
+.filter-button-container {
+    position: relative;
+}
+
+.filter-count-badge {
+    position: fixed;
+    bottom: 60px;
+    left: 90%;
+    transform: translate(70%, -50%);
+    border-radius: 50%;
+    z-index: 1002;
+    font-size: 0.75em; /* Меньший размер шрифта для счетчика */
+    padding: 0.25em 0.5em; /* Меньший паддинг для счетчика */
+}
+
 .comment-popup-btn {
     position: fixed;
     bottom: 60px;
