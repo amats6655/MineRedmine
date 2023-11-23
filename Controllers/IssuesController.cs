@@ -84,6 +84,8 @@ public class IssuesController : Controller
         {
             var clientIp = HttpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault();
             var issue = await _redmineService.GetIssueAsync(id, clientIp);
+            ViewData["CustomFieldNames"] = _customFieldNames;
+            ViewData["CustomFieldsSettings"] = _customFieldSettings;
             return View(issue);
         }
         catch (RedmineException ex)

@@ -1,8 +1,10 @@
-﻿@model Redmine.Net.Api.Types.Issue
+﻿@using Redmine.Net.Api.Types
+@using Microsoft.VisualBasic.CompilerServices
+@model Redmine.Net.Api.Types.Issue
 
 <!-- Кнопка для открытия модального окна -->
 <button type="button" class="comment-popup-btn comment-btn btn btn-primary" data-bs-toggle="modal" data-bs-target="#commentPopup" data-issue-id="@Model.Id" data-url="@Url.Action("AddComment", "Issues")">
-    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-chat-right-fill" viewBox="0 0 16 16">
+    <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-chat-right-fill" viewBox="0 0 16 16">
       <path d="M14 0a2 2 0 0 1 2 2v12.793a.5.5 0 0 1-.854.353l-2.853-2.853a1 1 0 0 0-.707-.293H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12z"/>
     </svg>
 </button> 
@@ -57,25 +59,28 @@
                     <dd class="col-sm-3 col-7">@Model.Id.ToString()</dd>
                     
                     <dt class="col-sm-3 col-5">Создано:</dt>
-                    <dd class="col-sm-3 col-7 text-truncate">@Model.CreatedOn.ToString()</dd>
+                    <dd class="col-sm-3 col-7 text-truncate">@Model.CreatedOn.ToString()</dd>      
+                    
+                    <dt class="col-sm-3 col-5">Объект:</dt>
+                    <dd class="col-sm-3 col-7">@GetBuilding()</dd>
+                    
+                    <dt class="col-sm-3 col-5">Местоположение:</dt>
+                    <dd class="col-sm-3 col-7">@GetLocation()</dd>
 
                     <dt class="col-sm-3 col-5">Приоритет:</dt>
                     <dd class="col-sm-3 col-7">@Model.Priority.Name</dd>
-
-                    <dt class="col-sm-3 col-5">Телефон:</dt>
-                    <dd class="col-sm-3 col-7"><a href="tel:@GetPhoneNumber()">@GetPhoneNumber()</a></dd>
-
-                    <dt class="col-sm-3 col-5">Местоположение:</dt>
-                    <dd class="col-sm-3 col-7">@GetLocation()</dd>
                     
                     <dt class="col-sm-3 col-5">Заявитель:</dt>
                     <dd class="col-sm-3 col-7">@Model.Author.Name</dd>
+
+                    <dt class="col-sm-3 col-5">Телефон:</dt>
+                    <dd class="col-sm-3 col-7"><a href="tel:@GetPhoneNumber()">@GetPhoneNumber()</a></dd>
                     
-                    <dt class="col-sm-3 col-5">Объект фонда:</dt>
-                    <dd class="col-sm-3 col-7"></dd>
+                    <dt class="col-sm-3 col-5">Назначена:</dt>
+                    <dd class="col-sm-3 col-7">@Model.AssignedTo.Name</dd>
                 </dl>
 
-                @Html.Raw(Model.Description)
+                <span> @Html.Raw(Model.Description)</span>
             </div>
         </div>
         <div class="take-issue-btn" style="" align="center">
@@ -137,6 +142,27 @@
         }
         
         return location;
+    }
+
+    private string GetBuilding()
+    {
+        var building = "Неизвестно";
+        var customFieldSettings = ViewData["CustomFieldsSettings"] as Dictionary<string, string>;
+        var customFieldNames = ViewData["CustomFieldNames"] as Dictionary<string, Dictionary<int, string>>;
+        foreach (var cf in Model.CustomFields)
+        {
+            if (!cf.Name.Equals(customFieldSettings["Buildings"])) continue;
+            foreach (var cfn in customFieldNames["Buildings"])
+            {
+                if (cfn.Key == int.Parse(cf.Values[0].Info))
+                {
+                    building = cfn.Value;
+                    break;
+                }
+            }
+            
+        }
+        return building;
     }
 }
 

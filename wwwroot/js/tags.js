@@ -1,4 +1,29 @@
 ﻿document.addEventListener("DOMContentLoaded", function() {
+    var updateButtonHighlights = function (){
+        document.querySelectorAll('.dropdown.dropend').forEach(function (dropdown){
+            var button = dropdown.querySelector('.filter-btn');
+            var checkboxes = dropdown.querySelectorAll('.filter-checkbox');
+            var isAnyChecked = Array.from(checkboxes).some(cb => cb.checked);
+            
+            if (isAnyChecked){
+                button.classList.add('highlighted-button');
+            } else {
+                button.classList.remove('highlighted-button');
+            }
+        });
+    };
+    
+    // Проверяем подсветки при загрузке страницы
+    updateButtonHighlights();
+    
+    // При изменении состояния чекбокса обновить подсветку кнопок
+    document.querySelectorAll('.filter-checkbox').forEach(function (checkbox){
+        checkbox.addEventListener('change', function(){
+            updateButtonHighlights();
+        });
+    });
+    
+    
     var filters = {};
     // Проверяем, есть ли данные в sessionStorage
     if (sessionStorage.getItem('filtersData')) {
@@ -10,8 +35,7 @@
     var iso = new Isotope(grid, {
         itemSelector: '.col'
     });
-
-
+    
 
     function combineFilters() {
         var output = [];
@@ -92,6 +116,7 @@
         // Сохраняем данные фильтрации в sessionStorage после применения фильтров
         var filtersString = JSON.stringify(filters);
         sessionStorage.setItem('filtersData', filtersString);
+        updateButtonHighlights();
         updateFilterCount();
         applyFilters();
     });

@@ -210,6 +210,11 @@ body {
     clear: both;
 }
 
+.highlighted-button{
+    background-color: #527aee;
+    color: #Ffffff;
+}
+
 .dropdown-menu.show {
     display: block;
     position: absolute;
@@ -257,7 +262,7 @@ body {
 
 .comment-popup-btn {
     position: fixed;
-    bottom: 60px;
+    bottom: 70px;
     left: 90%;
     transform: translateX(-50%);
     padding: 10px 10px;
