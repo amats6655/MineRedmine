@@ -71,6 +71,21 @@
                             </div>
                         </div>
                     </div>
+                    <div class="dropdown dropend">
+                        <button class="button dropdown-toggle filter-btn" type="button" id="eventDropdownButton" data-bs-toggle="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Мероприятие</button>
+                        <div class="dropdown-menu" aria-labelledby="priorityDropdown">
+                            <div class="dropdown-item">
+                                <label class="w-100">
+                                    <input type="checkbox" class="filter-checkbox d-none" data-group="event" data-filter=".event"/>Мероприятие <span class="badge bg-info">@Model.Count(i => i.Project.Id == 9).ToString()</span>
+                                </label>
+                            </div>
+                            <div class="dropdown-item">
+                                <label class="w-100">
+                                    <input type="checkbox" class="filter-checkbox d-none" data-group="event" data-filter=".nonevent"/>Не Мероприятие <span class="badge bg-info">@Model.Count(i => i.Project.Id != 9).ToString()</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                     
                         @{
                             var customFieldSettings = ViewData["CustomFieldsSettings"] as Dictionary<string, string>;
@@ -179,7 +194,8 @@
                 break;
             }
         }
-
+        var eventProj = (issue.Project.Id == 9) ? "event" : "nonevent";
+        
         var status = issue.Status.Id switch
         {
             2 => "in-work",
@@ -193,7 +209,7 @@
             4 => "critical",
             _ => "low"
             };
-        result.Append($" {status} {priority}");
+        result.Append($" {status} {priority} {eventProj}");
 
         return result.ToString();
     }
