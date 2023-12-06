@@ -68,7 +68,7 @@
         document.querySelector('.filter-count-badge').textContent = count;
     }
 
-    var checkboxes = document.querySelectorAll('.dropdown-menu .filter-checkbox');
+    var checkboxes = document.querySelectorAll('.filter-checkbox');
     checkboxes.forEach(function(checkbox) {
         var group = checkbox.dataset.group;
         var filterValue = checkbox.dataset.filter;
@@ -106,6 +106,8 @@
     updateFilterCount();
     applyFilters()
 
+    
+    
     var allButton = document.getElementById('all');
     allButton.addEventListener('click', function() {
         checkboxes.forEach(function(checkbox) {

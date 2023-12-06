@@ -289,6 +289,29 @@ body {
     overflow-y: auto;
 }
 
+.opacity-90{
+    --bs-bg-opacity: 0.9;   
+}
+
+
+.filter-event{
+    display: inline-block;
+    padding: 0.5em 1.0em;
+    border-radius: 4px;
+    background: #ffffff;
+    font-family: sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    border: 1px solid #000000;
+    margin: 10px;
+    -webkit-transition: background 0.3s;
+    -moz-transition: background 0.3s;
+    transition: background 0.3s;
+}
+.filter-event:hover {
+    background-color: #527aee;
+    color:#ffffff;
+}
 
 @media (max-width: 1024px) {
 
@@ -296,6 +319,10 @@ body {
 
 @media (max-width: 767px) {
     .button {
+        padding: 1em 1.5em;
+        font-size: 16px;
+    }
+    .filter-event{
         padding: 1em 1.5em;
         font-size: 16px;
     }

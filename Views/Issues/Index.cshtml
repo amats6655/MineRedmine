@@ -4,27 +4,16 @@
     @model List<Redmine.Net.Api.Types.Issue>
 
     <h1 align="center">Мои задачи</h1>
-    
-    <!-- Кнопка для открытия модального окна -->
-    
-    <div class="filter-button-container position-relative d-inline-block">
-        <button type="button" class="filter-popup-btn btn btn-primary" data-bs-target="#filterPopup" data-bs-toggle="modal">
-            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-funnel-fill" viewBox="0 0 16 16">
-                <path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5v-2z"/>
-            </svg>
-        </button>
-    <span class="filter-count-badge badge bg-danger">0</span> <!-- Элемент для отображения количества -->
-    </div>
 
-    <!-- Модальное окно -->
-    <div id="filterPopup" class="modal fade" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-scrollable modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalLablel">Фильтры</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
+    <div class="offcanvas offcanvas-start bg-body opacity-90" tabindex="-1" id="offcanvasExample">
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title">Фильтры</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Закрыть"></button>
+      </div>
+      <div class="offcanvas-body">
+        <div>
+          Настрой фильтры — познай дзен
+        </div>
                     <button class="button" id="all" data-filter="*">all <span class="badge bg-info"> @Model.Count.ToString()</span></button>
                     <div class="dropdown dropend">
                         <button class="button dropdown-toggle filter-btn" type="button" id="statusDropdown" data-bs-toggle="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Статус</button>
@@ -71,20 +60,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="dropdown dropend">
-                        <button class="button dropdown-toggle filter-btn" type="button" id="eventDropdownButton" data-bs-toggle="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Мероприятие</button>
-                        <div class="dropdown-menu" aria-labelledby="priorityDropdown">
-                            <div class="dropdown-item">
-                                <label class="w-100">
-                                    <input type="checkbox" class="filter-checkbox d-none" data-group="event" data-filter=".event"/>Мероприятие <span class="badge bg-info">@Model.Count(i => i.Project.Id == 9).ToString()</span>
-                                </label>
-                            </div>
-                            <div class="dropdown-item">
-                                <label class="w-100">
-                                    <input type="checkbox" class="filter-checkbox d-none" data-group="event" data-filter=".nonevent"/>Не Мероприятие <span class="badge bg-info">@Model.Count(i => i.Project.Id != 9).ToString()</span>
-                                </label>
-                            </div>
-                        </div>
+                    <div class="filter-event">
+                        <label class="w-100">
+                            <input type="checkbox" class="filter-checkbox d-none" data-group="event" data-filter=".event">Мероприятиe
+                            <span class="badge bg-info">@Model.Count(i => i.Project.Id == 9).ToString() </span>
+                        </label>
                     </div>
                     
                         @{
@@ -131,9 +111,18 @@
                                 }
                             }
                         }
-                </div>
-            </div>
-        </div>
+      </div>
+    </div>
+    
+    <!-- Кнопка для открытия модального окна -->
+    
+    <div class="filter-button-container position-relative d-inline-block">
+        <button type="button" class="filter-popup-btn btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample"> 
+            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-funnel-fill" viewBox="0 0 16 16">
+                <path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5v-2z"/>
+            </svg>
+        </button>
+    <span class="filter-count-badge badge bg-danger">0</span> <!-- Элемент для отображения количества -->
     </div>
 
     
