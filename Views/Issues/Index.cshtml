@@ -79,7 +79,7 @@
                                     <button class="button dropdown-toggle filter-btn" type="button" data-bs-toggle="dropdown">
                                         @fieldSetting.Value
                                     </button>
-                                    <div class="dropdown-menu">
+                                    <div class="dropdown-menu overflow-auto">
                                         @foreach (var cf in customFieldData)
                                         {
                                             if (cf.Values.Count > 0 && int.TryParse(cf.Values[0].Info, out int cfID))

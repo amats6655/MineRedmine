@@ -225,7 +225,7 @@ body {
 }
 
 .selected-filter {
-    background-color: #527aee; /* Синий фон */
+    background-color: #527aee !important; /* Синий фон */
     color: #ffffff; /* белый текст */
     border: 1px solid #527aee; /* Синяя граница */
 }
@@ -298,8 +298,9 @@ body {
     display: inline-block;
     padding: 0.5em 1.0em;
     border-radius: 4px;
-    background: #ffffff;
+    background-color: #ffffff;
     font-family: sans-serif;
+    /*color:#000000;*/
     font-size: 13px;
     cursor: pointer;
     border: 1px solid #000000;
@@ -308,10 +309,7 @@ body {
     -moz-transition: background 0.3s;
     transition: background 0.3s;
 }
-.filter-event:hover {
-    background-color: #527aee;
-    color:#ffffff;
-}
+
 
 @media (max-width: 1024px) {
 
