@@ -3,48 +3,44 @@
 @model Redmine.Net.Api.Types.Issue
 
 <!-- Кнопка для открытия модального окна -->
-<button type="button" class="comment-popup-btn comment-btn btn btn-primary" data-bs-toggle="modal" data-bs-target="#commentPopup" data-issue-id="@Model.Id" data-url="@Url.Action("AddComment", "Issues")">
+<button type="button" class="comment-popup-btn comment-btn btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" data-issue-id="@Model.Id" data-url="@Url.Action("AddComment", "Issues")">
     <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-chat-right-fill" viewBox="0 0 16 16">
       <path d="M14 0a2 2 0 0 1 2 2v12.793a.5.5 0 0 1-.854.353l-2.853-2.853a1 1 0 0 0-.707-.293H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12z"/>
     </svg>
 </button> 
 
-<!-- Модальное окно -->
-<div class="modal fade" id="commentPopup" tabindex="-1" aria-labelledby="commentPopupLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="commentPopupLabel">Добавить комментарий</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="commentForm" novalidate>
-                    <div class="mb-3">
-                        <label for="commentText" class="form-label">Комментарий</label>
-                        <textarea class="form-control" id="commentText" rows="3" required></textarea>
-                        <div class="invalid-feedback">Пожалуйста, введите комментарий.</div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="commentFile" class="form-label">Добавить вложение (макс. 5 МБ)</label>
-                        <input class="form-control" type="file" id="commentFile">
-                        <div class="invalid-feedback">Размер файла превышает 5 МБ.</div>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="privateComment">
-                        <label class="form-check-label" for="privateComment">Приватный комментарий</label>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <div id="loadingSpinner" class="spinner-border text-primary" role="status" style="display: none;">
-                    <span class="sr-only">Загрузка...</span>
-                </div>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                <button type="submit" class="btn btn-primary" form="commentForm">Отправить</button>
-            </div>
-        </div>
-    </div>
-</div>
+<div class="offcanvas offcanvas-end bg-body opacity-90" tabindex="-1" id="offcanvasExample">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">Комментарий</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Закрыть"></button>
+  </div>
+  <div class="offcanvas-body">
+      <form id="commentForm" novalidate>
+              <div class="mb-3">
+                  <label for="commentText" class="form-label">Текст комментария</label>
+                  <textarea class="form-control" id="commentText" rows="10" required></textarea>
+                  <div class="invalid-feedback">Пожалуйста, введите комментарий.</div>
+              </div>
+              <div class="mb-3">
+                  <label for="commentFile" class="form-label">Добавить вложение (макс. 5 МБ)</label>
+                  <input class="form-control" type="file" id="commentFile">
+                  <div class="invalid-feedback">Размер файла превышает 5 МБ.</div>
+              </div>
+              <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="privateComment">
+                  <label class="form-check-label" for="privateComment">Приватный комментарий</label>
+              </div>
+          </form>
+      </div>
+      <div class="offcanvas-end vstack gap-3">
+          <div id="loadingSpinner" class="spinner-border text-primary" role="status" style="display: none;">
+              <span class="sr-only">Загрузка...</span>
+          </div>
+          <button type="submit" class="btn btn-primary" form="commentForm">Отправить</button>
+          <button type="button" class="btn btn-outline-primary" data-bs-dismiss="offcanvas">Закрыть</button>
+      </div>
+  </div>
+
 
 
 
