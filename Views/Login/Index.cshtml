@@ -1,22 +1,25 @@
 ﻿<!-- HTML для модального окна -->
-<div id="apiKeyModal" class="modal show" tabindex="-1" role="dialog">
+<div id="apiKeyModal" class="modal show" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Вход</h5>
             </div>
             <div class="modal-body">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="useApiKey"/>
-                    <label class="form-check-label" for="useApiKey">Использовать API-ключ</label>
-                </div>
                 <input id="apiKeyInput" type="text" class="form-control authInput modal-auth" placeholder="API-ключ" style="display: none;"/>
-                <input id="usernameInput" type="text" class="form-control authInput modal-auth" placeholder="Логин"/>
-                <input id="passwordInput" type="password" class="form-control authInput modal-auth" placeholder="Пароль"/>
+                <div class="form-floating">
+                    <input id="usernameInput" type="text" class="form-control authInput modal-auth" placeholder="Логин"/>
+                    <label for="usernameInput">Логин</label>   
+                </div>
+                <div class="form-floating">
+                    <input id="passwordInput" type="password" class="form-control authInput modal-auth" placeholder="Пароль"/>
+                    <label for="passwordInput">Пароль</label>
+                </div>
+
                 <div id="error" class="alert-danger alert" style="display: none;">Неверные данные для входа</div>
             </div>
             <div class="modal-footer">
-                <button id="submitButton" type="button" class="btn btn-primary">Войти</button>
+                <button id="submitButton" type="button" class="btn btn-primary w-100">Войти</button>
             </div>
         </div>
     </div>
