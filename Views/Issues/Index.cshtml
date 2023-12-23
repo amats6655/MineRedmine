@@ -79,7 +79,7 @@
                                     <button class="button dropdown-toggle filter-btn" type="button" data-bs-toggle="dropdown">
                                         @fieldSetting.Value
                                     </button>
-                                    <div class="dropdown-menu overflow-auto">
+                                    <div class="dropdown-menu overflow-auto buildings-dropdown-menu">
                                         @foreach (var cf in customFieldData)
                                         {
                                             if (cf.Values.Count > 0 && int.TryParse(cf.Values[0].Info, out int cfID))
@@ -87,8 +87,13 @@
                                                 if (customFieldNames[fieldSetting.Key].ContainsKey(cfID))
                                                 {
                                                     <div class="dropdown-item">
-                                                    <label class="w-100">
-                                                            <input type="checkbox" class="filter-checkbox d-none" data-group="@fieldSetting.Key" data-filter=".@cf.Values[0].Info">@customFieldNames[fieldSetting.Key][int.Parse(cf.Values[0].Info)]
+                                                    <label class="w-100 text-truncate">
+                                                            <input 
+                                                            type="checkbox" 
+                                                            class="filter-checkbox d-none" 
+                                                            data-group="@fieldSetting.Key" 
+                                                            data-filter=".@cf.Values[0].Info"
+                                                            >@customFieldNames[fieldSetting.Key][int.Parse(cf.Values[0].Info)]
                                                         </label>
                                                     </div>
                                                 }

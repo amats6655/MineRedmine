@@ -223,7 +223,10 @@ body {
     left: 100%; /* Смещение вправо */
     transform: translate3d(0, 0, 0); /* Сброс трансформации */
 }
-
+.buildings-dropdown-menu{
+    height: 500%;
+    width: 55%;
+}
 .selected-filter {
     background-color: #527aee !important; /* Синий фон */
     color: #ffffff; /* белый текст */
